@@ -6,6 +6,8 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 include_once '../../Includes/config/Database.php';
 include_once '../../Includes/TableClasses/Category.php';
+include_once '../../Includes/TableClasses/Product.php';
+include_once '../../Includes/TableClasses/Upload.php';
 include_once '../../Includes/TableFunctions/CategoryFunctions.php';
 
 $database = new Database();

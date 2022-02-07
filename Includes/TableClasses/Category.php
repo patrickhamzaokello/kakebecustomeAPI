@@ -47,24 +47,37 @@ class Category
         $pro_name = null;
         $pro_category_id = null;
 
+        $categoryids = array();
         $categoryMenuItems = array();
 
-        $stmt = $this->conn->prepare("SELECT `id`, `name`, `category_id` FROM products WHERE category_id = ? ORDER BY num_of_sale LIMIT 6");
-        $stmt->bind_param("i", $this->id);
-        $stmt->execute();
-        $stmt->bind_result($pro_id, $pro_name, $pro_category_id);
 
-        while ($stmt->fetch()) {
-            $temp = array();
+        $category_stmt = "SELECT id FROM products  WHERE published = 1 AND category_id = ". $this->id. " ORDER BY num_of_sale LIMIT 6";
+		$menu_type_id_result = mysqli_query($this->conn, $category_stmt);
 
-			$temp['id'] = $pro_id;
-			$temp['name'] = $pro_name;
-			$temp['category_id'] = $pro_category_id;
+		while ($row = mysqli_fetch_array($menu_type_id_result)) {
 
+			array_push($categoryids, $row);
+		}
 
+    
+		foreach ($categoryids as $row) {
+			$product = new Product($this->conn, intval($row['id']));
+			$temp = array();
+			$temp['id'] = $product->getId();
+			$temp['name'] = $product->getName();
+			$temp['category_id'] = $product->getCategory_id();
+            $temp['photos'] = $product->getPhotos();
+			$temp['thumbnail_img'] = $product->getThumbnail_img();
+			$temp['unit_price'] = $product->getUnit_price();
+            $temp['purchase_price'] = $product->getPurchase_price();
+			$temp['meta_title'] = $product->getMeta_title();
+			$temp['meta_description'] = $product->getMeta_description();
+            $temp['meta_img'] = $product->getMeta_img();
+            $temp['published'] = $product->getPublished();
+	
 			array_push($categoryMenuItems, $temp);
+		}
 
-        }
 
         return $categoryMenuItems;
     }

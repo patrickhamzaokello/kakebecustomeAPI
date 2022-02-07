@@ -23,7 +23,7 @@ class CategoryFunctions
 		$no_of_records_per_page = 10;
 		$offset = ($this->pageno - 1) * $no_of_records_per_page;
 
-		$sql = "SELECT COUNT(DISTINCT(category_id)) as count FROM products ORDER BY `products`.`featured` DESC limit 1";
+		$sql = "SELECT COUNT(DISTINCT(category_id)) as count FROM products WHERE published = 1 ORDER BY `products`.`featured` DESC limit 1";
 		$result = mysqli_query($this->conn, $sql);
 		$data = mysqli_fetch_assoc($result);
 		$total_rows = floatval($data['count']);
@@ -36,7 +36,7 @@ class CategoryFunctions
 		$itemRecords = array();
 
 
-		$category_stmt = "SELECT DISTINCT(category_id) FROM products ORDER BY `products`.`featured` DESC LIMIT " . $offset . "," . $no_of_records_per_page . "";
+		$category_stmt = "SELECT DISTINCT(category_id) FROM products  WHERE published = 1 ORDER BY `products`.`featured` DESC LIMIT " . $offset . "," . $no_of_records_per_page . "";
 		$menu_type_id_result = mysqli_query($this->conn, $category_stmt);
 
 		while ($row = mysqli_fetch_array($menu_type_id_result)) {

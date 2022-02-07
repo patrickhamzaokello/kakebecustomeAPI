@@ -61,8 +61,8 @@ class Product
             $this->shipping_type = $this->shipping_type;
             $this->shipping_cost = $this->shipping_cost;
             $this->is_quantity_multiplied = $this->is_quantity_multiplied;
-            $this->est_shipping_days =  $this->est_shipping_day;
-            $this->est_shipping_day =  $this->est_shipping_day;
+            $this->est_shipping_days =  $this->est_shipping_days;
+            $this->num_of_sale =  $this->num_of_sale;
             $this->meta_title = $this->meta_title;
             $this->meta_description = $this->meta_description;
             $this->meta_img = $this->meta_img;
@@ -101,5 +101,69 @@ class Product
     public function getCategory_id()
     {
         return $this->category_id;
+    }
+
+    /**
+     * Get the value of photos
+     */ 
+    public function getPhotos()
+    {
+        return $this->photos;
+    }
+
+    /**
+     * Get the value of thumbnail_img
+     */ 
+    public function getThumbnail_img()
+    {
+        return $this->thumbnail_img;
+    }
+
+    /**
+     * Get the value of unit_price
+     */ 
+    public function getUnit_price()
+    {
+        return $this->unit_price;
+    }
+
+    /**
+     * Get the value of purchase_price
+     */ 
+    public function getPurchase_price()
+    {
+        return $this->purchase_price;
+    }
+
+    /**
+     * Get the value of meta_title
+     */ 
+    public function getMeta_title()
+    {
+        return $this->meta_title;
+    }
+
+    /**
+     * Get the value of meta_description
+     */ 
+    public function getMeta_description()
+    {
+        return $this->meta_description;
+    }
+
+    /**
+     * Get the value of meta_img
+     */ 
+    public function getMeta_img()
+    {
+        return $this->meta_img;
+    }
+
+    /**
+     * Get the value of published
+     */ 
+    public function getPublished()
+    {
+        return $this->published;
     }
 }
