@@ -1,0 +1,10 @@
+RewriteEngine On    # Turn on the rewriting engine
+RewriteRule ^read$ read.php [NC,L]
+RewriteRule ^read/([0-9_-]*)$ read.php?id=$1 [NC,L]
+RewriteRule ^readPaginated$ readPaginated.php [NC,L]
+RewriteRule ^readPaginated/([0-9_-]*)$ readPaginated.php?id=$1 [NC,L]
+RewriteRule ^readSectionedMenu$ readSectionedMenu.php [NC,L]
+RewriteRule ^readSectionedMenu/([0-9_-]*)$ readSectionedMenu.php?id=$1 [NC,L]
+RewriteRule ^create$ create.php [NC,L]
+RewriteRule ^update$ update.php [NC,L]
+RewriteRule ^delete$ delete.php [NC,L]

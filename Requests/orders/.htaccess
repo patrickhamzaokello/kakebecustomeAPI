@@ -1,0 +1,6 @@
+RewriteEngine On    # Turn on the rewriting engine
+RewriteRule ^userOrders$ userOrders.php [NC,L]
+RewriteRule ^userOrders/([0-9_-]*)$ userOrders.php?customerId=$1&page=$1 [NC,L]
+RewriteRule ^create_order$ create_order.php [NC,L]
+RewriteRule ^update$ update.php [NC,L]
+RewriteRule ^delete$ delete.php [NC,L]
