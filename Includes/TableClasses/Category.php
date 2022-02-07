@@ -73,6 +73,7 @@ class Category
 			$temp['meta_title'] = $product->getMeta_title();
 			$temp['meta_description'] = $product->getMeta_description();
             $temp['meta_img'] = $product->getMeta_img();
+            $temp['min_qtn'] = $product->getMin_qty();
             $temp['published'] = $product->getPublished();
 	
 			array_push($categoryMenuItems, $temp);

@@ -8,6 +8,7 @@ class Product
     public $published, $approved, $stock_visibility_state, $cash_on_delivery, $featured, $seller_featured, $current_stock, $unit, $min_qty, $low_stock_quantity;
     public $discount, $discount_type, $discount_start_date, $discount_end_date, $tax, $tax_type, $shipping_type, $shipping_cost, $is_quantity_multiplied, $est_shipping_days, $num_of_sale, $meta_title, $meta_description, $meta_img, $pdf, $slug, $rating, $barcode, $digital, $auction_product, $file_name, $file_path, $created_at, $updated_at;
     private $conn;
+    private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
 
 
     public function __construct($con, $id)
@@ -81,7 +82,7 @@ class Product
 
     /**
      * Get the value of id
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -89,7 +90,7 @@ class Product
 
     /**
      * Get the value of name
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -97,7 +98,7 @@ class Product
 
     /**
      * Get the value of category_id
-     */ 
+     */
     public function getCategory_id()
     {
         return $this->category_id;
@@ -105,23 +106,38 @@ class Product
 
     /**
      * Get the value of photos
-     */ 
+     */
     public function getPhotos()
     {
-        return $this->photos;
+            // use of explode
+            $string =$this->photos;
+            $str_arr = explode(",", $string);
+            $meta_img_path = array();
+    
+            foreach($str_arr as $imageID){
+                $upload = new Upload($this->conn, $imageID);
+                $filename = $this->imagePathRoot . $upload->getFile_name();
+                array_push($meta_img_path, $filename);
+            }
+    
+            return implode(",", $meta_img_path);
     }
 
     /**
      * Get the value of thumbnail_img
-     */ 
+     */
     public function getThumbnail_img()
     {
-        return $this->thumbnail_img;
+
+        $upload = new Upload($this->conn, $this->thumbnail_img);
+        $filename = $this->imagePathRoot . $upload->getFile_name();
+
+        return $filename;
     }
 
     /**
      * Get the value of unit_price
-     */ 
+     */
     public function getUnit_price()
     {
         return $this->unit_price;
@@ -129,7 +145,7 @@ class Product
 
     /**
      * Get the value of purchase_price
-     */ 
+     */
     public function getPurchase_price()
     {
         return $this->purchase_price;
@@ -137,7 +153,7 @@ class Product
 
     /**
      * Get the value of meta_title
-     */ 
+     */
     public function getMeta_title()
     {
         return $this->meta_title;
@@ -145,7 +161,7 @@ class Product
 
     /**
      * Get the value of meta_description
-     */ 
+     */
     public function getMeta_description()
     {
         return $this->meta_description;
@@ -153,17 +169,36 @@ class Product
 
     /**
      * Get the value of meta_img
-     */ 
+     */
     public function getMeta_img()
     {
-        return $this->meta_img;
+        // use of explode
+        $string = $this->meta_img;
+        $str_arr = explode(",", $string);
+        $meta_img_path = array();
+
+        foreach($str_arr as $imageID){
+            $upload = new Upload($this->conn, $imageID);
+            $filename = $this->imagePathRoot . $upload->getFile_name();
+            array_push($meta_img_path, $filename);
+        }
+
+        return implode(",", $meta_img_path);
     }
 
     /**
      * Get the value of published
-     */ 
+     */
     public function getPublished()
     {
         return $this->published;
+    }
+
+    /**
+     * Get the value of min_qty
+     */ 
+    public function getMin_qty()
+    {
+        return $this->min_qty;
     }
 }
