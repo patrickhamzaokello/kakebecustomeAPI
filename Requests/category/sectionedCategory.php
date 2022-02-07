@@ -1,5 +1,5 @@
 <?php
-// http://localhost/projects/KakebeAPI/Requests/category/readSectionedMenu.php?id=4
+// http://localhost/projects/KakebeAPI/Requests/category/sectionedCategory.php?page=2
 
 
 header("Access-Control-Allow-Origin: *");
