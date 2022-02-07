@@ -3,7 +3,7 @@ class Category
 {
 
     private $Table = "categories";
-    public $id, $parent_id, $level, $name, $order_level, $commission_rate, $banner, $icon, $featured, $top, $digital, $slug, $meta_title, $meta_description, $created_at, $updated_at;
+    public $id, $parent_id, $level, $name, $order_level, $commision_rate, $banner, $icon, $featured, $top, $digital, $slug, $meta_title, $meta_description, $created_at, $updated_at;
     private $conn;
 
 
@@ -13,7 +13,7 @@ class Category
         $this->conn = $con;
         $this->id = $id;
 
-        $stmt = $this->conn->prepare("SELECT `id`, `parent_id`, `level`, `name`, `order_level`, `commision_rate`, `banner`, `icon`, `featured`, `top`, `digital`, `slug`, `meta_title`, `meta_description`, `created_at`,  `updated_at` FROM " . $this->Table . " WHERE id = ?");
+        $stmt = $this->conn->prepare("SELECT `id`, `parent_id`, `level`, `name`, `order_level`, `commision_rate`, `banner`, `icon`, `featured`, `top`, `digital`, `slug`, `meta_title`, `meta_description`, `created_at`,  `updated_at` FROM " . $this->Table . " WHERE id = ? ORDER BY featured DESC");
         $stmt->bind_param("i", $this->id);
         $stmt->execute();
         $stmt->bind_result($this->id, $this->parent_id, $this->level, $this->name, $this->order_level, $this->commission_rate, $this->banner, $this->icon, $this->featured, $this->top, $this->digital, $this->slug, $this->meta_title, $this->meta_description, $this->created_at, $this->updated_at);
@@ -43,11 +43,11 @@ class Category
 
     function getCategoryProducts()
     {
-
-        $categoryProductsID = array();
         $pro_id = null;
         $pro_name = null;
         $pro_category_id = null;
+
+        $categoryMenuItems = array();
 
         $stmt = $this->conn->prepare("SELECT `id`, `name`, `category_id` FROM products WHERE category_id = ? ORDER BY num_of_sale LIMIT 6");
         $stmt->bind_param("i", $this->id);
@@ -55,10 +55,18 @@ class Category
         $stmt->bind_result($pro_id, $pro_name, $pro_category_id);
 
         while ($stmt->fetch()) {
-            array_push($categoryProducts, $pro_id);
+            $temp = array();
+
+			$temp['id'] = $pro_id;
+			$temp['name'] = $pro_name;
+			$temp['category_id'] = $pro_category_id;
+
+
+			array_push($categoryMenuItems, $temp);
+
         }
 
-        return $categoryProductsID;
+        return $categoryMenuItems;
     }
 
 
@@ -194,4 +202,5 @@ class Category
         $mysqldate = date('d M Y', $phpdate);
         return $mysqldate;
     }
+
 }
