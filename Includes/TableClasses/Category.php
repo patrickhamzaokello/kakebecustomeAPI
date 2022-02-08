@@ -43,10 +43,6 @@ class Category
 
     function getCategoryProducts()
     {
-        $pro_id = null;
-        $pro_name = null;
-        $pro_category_id = null;
-
         $categoryids = array();
         $categoryMenuItems = array();
 
@@ -69,6 +65,7 @@ class Category
             $temp['photos'] = $product->getPhotos();
 			$temp['thumbnail_img'] = $product->getThumbnail_img();
 			$temp['unit_price'] = $product->getUnit_price();
+            $temp['discount'] = $product->getDiscount();
             $temp['purchase_price'] = $product->getPurchase_price();
 			$temp['meta_title'] = $product->getMeta_title();
 			$temp['meta_description'] = $product->getMeta_description();

@@ -201,4 +201,12 @@ class Product
     {
         return $this->min_qty;
     }
+
+    /**
+     * Get the value of discount
+     */ 
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
 }
