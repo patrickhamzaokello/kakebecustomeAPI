@@ -21,7 +21,7 @@ class SearchFunctions
     {
 
         // create the base variables for building the search query
-        $search_string = "SELECT * FROM products WHERE ";
+        $search_string = "SELECT * FROM products WHERE published = 1 AND ";
         $display_words = "";
 
         // format each of search keywords into the db query to be run
@@ -59,7 +59,6 @@ class SearchFunctions
 
             $category_stmt = $search_string . " LIMIT " . $offset . "," . $no_of_records_per_page . "";
 
-            echo  $category_stmt;
 
             $menu_type_id_result = mysqli_query($this->conn, $category_stmt);
 
@@ -76,9 +75,9 @@ class SearchFunctions
                 $temp['category_id'] = $product->getCategory_id();
                 $temp['photos'] = $product->getPhotos();
                 $temp['thumbnail_img'] = $product->getThumbnail_img();
-                $temp['unit_price'] = $product->getUnit_price();
-                $temp['discount'] = $product->getDiscount();
-                $temp['purchase_price'] = $product->getPurchase_price();
+                $temp['unit_price'] = intVal($product->getUnit_price());
+                $temp['discount'] = intVal($product->getDiscount());
+                $temp['purchase_price'] = intVal($product->getPurchase_price());
                 $temp['meta_title'] = $product->getMeta_title();
                 $temp['meta_description'] = $product->getMeta_description();
                 $temp['meta_img'] = $product->getMeta_img();
@@ -87,18 +86,22 @@ class SearchFunctions
                 array_push($menuCategory, $temp);
             }
 
-
             $itemRecords["page"] = $this->pageno;
             $itemRecords["searchTerm"] = $display_words;
-            $itemRecords["sectioned_category_results"] = $menuCategory;
+            $itemRecords["products"] = $menuCategory;
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
 
 
-            while ($row = mysqli_fetch_assoc($query)) {
-            }
+        } else {
+            $itemRecords["page"] = $this->pageno;
+            $itemRecords["searchTerm"] = $display_words;
+            $itemRecords["products"] = null;
+            $itemRecords["total_pages"] = $total_pages;
+            $itemRecords["total_results"] = $total_rows;
         }
         return $itemRecords;
+
     }
 
 
@@ -156,9 +159,9 @@ class SearchFunctions
                 $temp['category_id'] = $product->getCategory_id();
                 $temp['photos'] = $product->getPhotos();
                 $temp['thumbnail_img'] = $product->getThumbnail_img();
-                $temp['unit_price'] = $product->getUnit_price();
-                $temp['discount'] = $product->getDiscount();
-                $temp['purchase_price'] = $product->getPurchase_price();
+                $temp['unit_price'] = intVal($product->getUnit_price());
+                $temp['discount'] = intVal($product->getDiscount());
+                $temp['purchase_price'] = intVal($product->getPurchase_price());
                 $temp['meta_title'] = $product->getMeta_title();
                 $temp['meta_description'] = $product->getMeta_description();
                 $temp['meta_img'] = $product->getMeta_img();
@@ -174,9 +177,14 @@ class SearchFunctions
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
 
-
-        
+        } else {
+            $itemRecords["page"] = $this->pageno;
+            $itemRecords["searchTerm"] = $display_words;
+            $itemRecords["products"] = null;
+            $itemRecords["total_pages"] = $total_pages;
+            $itemRecords["total_results"] = $total_rows;
         }
+
         return $itemRecords;
     }
 }
