@@ -4,6 +4,7 @@ class CategoryFunctions
 
 	public $page;
 	private $conn;
+	private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
 
 
 
@@ -95,6 +96,35 @@ class CategoryFunctions
 
 
 		if ($this->pageno == 1) {
+
+			// get banner
+			$banners = new BusinessSettings($this->conn, 84);
+			$remove_brackets = str_replace(array('[',']'),'',$banners->getHomeSliders());
+			$remove_braces = str_replace(array('"','"'),'',$remove_brackets);
+			$str_arr = explode(",", $remove_braces);
+			$slidermeta_img_path = array();
+
+
+			foreach($str_arr as $imageID){
+				$temp = array();
+				$upload = new Upload($this->conn, $imageID);
+				$filename = $this->imagePathRoot . $upload->getFile_name();
+				$temp['id'] = 1;
+				$temp['link'] = 2;
+				$temp['filePath'] = $filename;
+				array_push($slidermeta_img_path, $temp);
+			}
+
+
+			$slider_temps = array();
+			$slider_temps['sliderBanners'] = $slidermeta_img_path;
+			array_push($menuCategory, $slider_temps);
+
+			
+
+
+
+
 			// Todays Deal Begin
 
 			$bestsellingProductsID = array();

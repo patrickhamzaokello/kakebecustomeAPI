@@ -14,7 +14,7 @@ class BusinessSettings {
         $this->conn = $con;
         $this->id = $id;
 
-        $stmt = $this->conn->prepare("SELECT `id`, `type`, `value`, `lang`, `created_at`, `updated_at` FROM " . $this->Table . " WHERE id = ? ORDER BY id");
+        $stmt = $this->conn->prepare("SELECT `id`, `type`, `value`,`created_at`, `updated_at` FROM " . $this->Table . " WHERE id = ? ORDER BY id");
         $stmt->bind_param("i", $this->id);
         $stmt->execute();
         $stmt->bind_result($this->id, $this->type, $this->value, $this->created_at, $this->updated_at);
@@ -76,6 +76,11 @@ class BusinessSettings {
     public function getUpdated_at()
     {
         return $this->updated_at;
+    }
+
+
+    public function getHomeSliders(){
+        return $this->value;
     }
 }
 

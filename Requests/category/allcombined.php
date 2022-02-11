@@ -8,6 +8,7 @@ include_once '../../Includes/config/Database.php';
 include_once '../../Includes/TableClasses/Category.php';
 include_once '../../Includes/TableClasses/Product.php';
 include_once '../../Includes/TableClasses/Upload.php';
+include_once '../../Includes/TableClasses/BusinessSettings.php';
 include_once '../../Includes/TableFunctions/CategoryFunctions.php';
 
 $database = new Database();
