@@ -122,9 +122,6 @@ class CategoryFunctions
 
 			
 
-
-
-
 			// Todays Deal Begin
 
 			$bestsellingProductsID = array();
@@ -162,7 +159,7 @@ class CategoryFunctions
 			$best_temps['id'] = 100;
 			$best_temps['parent_id'] = 100;
 			$best_temps['level'] = 1;
-			$best_temps['name'] =  "Todays Deal";
+			$best_temps['name'] =  "Today's Deal";
 			$best_temps['order_level'] =  0;
 			$best_temps['commision_rate'] = 0;
 			$best_temps['banner'] = null;
@@ -170,7 +167,7 @@ class CategoryFunctions
 			$best_temps['featured'] = 0;
 			$best_temps['top'] = 0;
 			$best_temps['digital'] = 0;
-			$best_temps['slug'] =  "Todays Deal";
+			$best_temps['slug'] =  "Today's Deal";
 			$best_temps['meta_title'] = null;
 			$best_temps['meta_description'] = null;
 			$best_temps['created_at'] = "10 Jul 2021";
