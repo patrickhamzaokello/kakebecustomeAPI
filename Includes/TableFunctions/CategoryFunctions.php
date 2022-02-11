@@ -156,7 +156,7 @@ class CategoryFunctions
 				$temp['meta_description'] = $category->getMeta_description();
 				$temp['created_at'] = $category->getCreated_at();
 				$temp['updated_at'] = $category->getUpdated_at();
-				$temp['products'] = $category->getCategoryProducts();
+				$temp['featuredCategoriesProduct'] = $category->getCategoryProducts();
 				array_push($featuredCategory, $temp);
 			}
 
