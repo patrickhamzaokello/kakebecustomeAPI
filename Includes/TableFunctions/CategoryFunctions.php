@@ -93,170 +93,173 @@ class CategoryFunctions
 		$menuCategory = array();
 		$itemRecords = array();
 
-		// Todays Deal Begin
 
-		$bestsellingProductsID = array();
-		$bestSellingProducts = array();
-		$category_stmts = "SELECT DISTINCT(id) FROM products   WHERE published = 1 AND `todays_deal` = 1 ORDER BY `products`.`created_at` DESC  LIMIT 8";
-		$menu_type_id_results = mysqli_query($this->conn, $category_stmts);
+		if ($this->pageno == 1) {
+			// Todays Deal Begin
 
-		while ($row = mysqli_fetch_array($menu_type_id_results)) {
+			$bestsellingProductsID = array();
+			$bestSellingProducts = array();
+			$category_stmts = "SELECT DISTINCT(id) FROM products   WHERE published = 1 AND `todays_deal` = 1 ORDER BY `products`.`created_at` DESC  LIMIT 8";
+			$menu_type_id_results = mysqli_query($this->conn, $category_stmts);
 
-			array_push($bestsellingProductsID, $row);
+			while ($row = mysqli_fetch_array($menu_type_id_results)) {
+
+				array_push($bestsellingProductsID, $row);
+			}
+
+			foreach ($bestsellingProductsID as $row) {
+				$product = new Product($this->conn, intval($row['id']));
+				$temp = array();
+				$temp['id'] = $product->getId();
+				$temp['name'] = $product->getName();
+				$temp['category_id'] = $product->getCategory_id();
+				$temp['photos'] = $product->getPhotos();
+				$temp['thumbnail_img'] = $product->getThumbnail_img();
+				$temp['unit_price'] = $product->getUnit_price();
+				$temp['discount'] = $product->getDiscount();
+				$temp['purchase_price'] = $product->getPurchase_price();
+				$temp['meta_title'] = $product->getMeta_title();
+				$temp['meta_description'] = $product->getMeta_description();
+				$temp['meta_img'] = $product->getMeta_img();
+				$temp['min_qtn'] = $product->getMin_qty();
+				$temp['published'] = $product->getPublished();
+
+				array_push($bestSellingProducts, $temp);
+			}
+
+
+			$best_temps = array();
+			$best_temps['id'] = 100;
+			$best_temps['parent_id'] = 100;
+			$best_temps['level'] = 1;
+			$best_temps['name'] =  "Todays Deal";
+			$best_temps['order_level'] =  0;
+			$best_temps['commision_rate'] = 0;
+			$best_temps['banner'] = null;
+			$best_temps['icon'] = null;
+			$best_temps['featured'] = 0;
+			$best_temps['top'] = 0;
+			$best_temps['digital'] = 0;
+			$best_temps['slug'] =  "Todays Deal";
+			$best_temps['meta_title'] = null;
+			$best_temps['meta_description'] = null;
+			$best_temps['created_at'] = "10 Jul 2021";
+			$best_temps['updated_at'] = "10 Jul 2021";
+			$best_temps['products'] = $bestSellingProducts;
+			array_push($menuCategory, $best_temps);
+
+			// end Todays Deal  Fetch
+
+			// Featured Products Begin
+
+			$bestsellingProductsID = array();
+			$bestSellingProducts = array();
+			$category_stmts = "SELECT DISTINCT(id) FROM products   WHERE published = 1 AND `featured` = 1 ORDER BY `products`.`created_at` DESC  LIMIT 8";
+			$menu_type_id_results = mysqli_query($this->conn, $category_stmts);
+
+			while ($row = mysqli_fetch_array($menu_type_id_results)) {
+
+				array_push($bestsellingProductsID, $row);
+			}
+
+			foreach ($bestsellingProductsID as $row) {
+				$product = new Product($this->conn, intval($row['id']));
+				$temp = array();
+				$temp['id'] = $product->getId();
+				$temp['name'] = $product->getName();
+				$temp['category_id'] = $product->getCategory_id();
+				$temp['photos'] = $product->getPhotos();
+				$temp['thumbnail_img'] = $product->getThumbnail_img();
+				$temp['unit_price'] = $product->getUnit_price();
+				$temp['discount'] = $product->getDiscount();
+				$temp['purchase_price'] = $product->getPurchase_price();
+				$temp['meta_title'] = $product->getMeta_title();
+				$temp['meta_description'] = $product->getMeta_description();
+				$temp['meta_img'] = $product->getMeta_img();
+				$temp['min_qtn'] = $product->getMin_qty();
+				$temp['published'] = $product->getPublished();
+
+				array_push($bestSellingProducts, $temp);
+			}
+
+			$best_temps = array();
+			$best_temps['id'] = 100;
+			$best_temps['parent_id'] = 100;
+			$best_temps['level'] = 1;
+			$best_temps['name'] =  "Featured Products";
+			$best_temps['order_level'] =  0;
+			$best_temps['commision_rate'] = 0;
+			$best_temps['banner'] = null;
+			$best_temps['icon'] = null;
+			$best_temps['featured'] = 0;
+			$best_temps['top'] = 0;
+			$best_temps['digital'] = 0;
+			$best_temps['slug'] =  "Featured Products";
+			$best_temps['meta_title'] = null;
+			$best_temps['meta_description'] = null;
+			$best_temps['created_at'] = "10 Jul 2021";
+			$best_temps['updated_at'] = "10 Jul 2021";
+			$best_temps['products'] = $bestSellingProducts;
+			array_push($menuCategory, $best_temps);
+
+			// end Featured Products Fetch
+
+
+
+			//BEST selling  fetch Begin
+
+			$bestsellingProductsID = array();
+			$bestSellingProducts = array();
+			$category_stmts = "SELECT DISTINCT(id) FROM products  WHERE published = 1 ORDER BY `products`.`num_of_sale` DESC  LIMIT 8";
+			$menu_type_id_results = mysqli_query($this->conn, $category_stmts);
+
+			while ($row = mysqli_fetch_array($menu_type_id_results)) {
+
+				array_push($bestsellingProductsID, $row);
+			}
+
+			foreach ($bestsellingProductsID as $row) {
+				$product = new Product($this->conn, intval($row['id']));
+				$temp = array();
+				$temp['id'] = $product->getId();
+				$temp['name'] = $product->getName();
+				$temp['category_id'] = $product->getCategory_id();
+				$temp['photos'] = $product->getPhotos();
+				$temp['thumbnail_img'] = $product->getThumbnail_img();
+				$temp['unit_price'] = $product->getUnit_price();
+				$temp['discount'] = $product->getDiscount();
+				$temp['purchase_price'] = $product->getPurchase_price();
+				$temp['meta_title'] = $product->getMeta_title();
+				$temp['meta_description'] = $product->getMeta_description();
+				$temp['meta_img'] = $product->getMeta_img();
+				$temp['min_qtn'] = $product->getMin_qty();
+				$temp['published'] = $product->getPublished();
+
+				array_push($bestSellingProducts, $temp);
+			}
+
+			$best_temps = array();
+			$best_temps['id'] = 100;
+			$best_temps['parent_id'] = 100;
+			$best_temps['level'] = 1;
+			$best_temps['name'] =  "Best Selling";
+			$best_temps['order_level'] =  0;
+			$best_temps['commision_rate'] = 0;
+			$best_temps['banner'] = null;
+			$best_temps['icon'] = null;
+			$best_temps['featured'] = 0;
+			$best_temps['top'] = 0;
+			$best_temps['digital'] = 0;
+			$best_temps['slug'] =  "Best Selling";
+			$best_temps['meta_title'] = null;
+			$best_temps['meta_description'] = null;
+			$best_temps['created_at'] = "10 Jul 2021";
+			$best_temps['updated_at'] = "10 Jul 2021";
+			$best_temps['products'] = $bestSellingProducts;
+			array_push($menuCategory, $best_temps);
+
+			// end Best Selling Fetch
 		}
-
-		foreach ($bestsellingProductsID as $row) {
-			$product = new Product($this->conn, intval($row['id']));
-			$temp = array();
-			$temp['id'] = $product->getId();
-			$temp['name'] = $product->getName();
-			$temp['category_id'] = $product->getCategory_id();
-			$temp['photos'] = $product->getPhotos();
-			$temp['thumbnail_img'] = $product->getThumbnail_img();
-			$temp['unit_price'] = $product->getUnit_price();
-			$temp['discount'] = $product->getDiscount();
-			$temp['purchase_price'] = $product->getPurchase_price();
-			$temp['meta_title'] = $product->getMeta_title();
-			$temp['meta_description'] = $product->getMeta_description();
-			$temp['meta_img'] = $product->getMeta_img();
-			$temp['min_qtn'] = $product->getMin_qty();
-			$temp['published'] = $product->getPublished();
-
-			array_push($bestSellingProducts, $temp);
-		}
-
-		
-		$best_temps = array();
-		$best_temps['id'] = 100;
-		$best_temps['parent_id'] = 100;
-		$best_temps['level'] =1;
-		$best_temps['name'] =  "Best Selling";
-		$best_temps['order_level'] =  0;
-		$best_temps['commision_rate'] = 0;
-		$best_temps['banner'] =null;
-		$best_temps['icon'] = null;
-		$best_temps['featured'] = 0;
-		$best_temps['top'] = 0;
-		$best_temps['digital'] = 0;
-		$best_temps['slug'] =  "Todays Deal";
-		$best_temps['meta_title'] = null;
-		$best_temps['meta_description'] = null;
-		$best_temps['created_at'] = "10 Jul 2021";
-		$best_temps['updated_at'] = "10 Jul 2021";
-		$best_temps['products'] = $bestSellingProducts;
-		array_push($menuCategory, $best_temps);
-
-		// end Todays Deal  Fetch
-
-		// Featured Products Begin
-
-		$bestsellingProductsID = array();
-		$bestSellingProducts = array();
-		$category_stmts = "SELECT DISTINCT(id) FROM products   WHERE published = 1 AND `featured` = 1 ORDER BY `products`.`created_at` DESC  LIMIT 8";
-		$menu_type_id_results = mysqli_query($this->conn, $category_stmts);
-
-		while ($row = mysqli_fetch_array($menu_type_id_results)) {
-
-			array_push($bestsellingProductsID, $row);
-		}
-
-		foreach ($bestsellingProductsID as $row) {
-			$product = new Product($this->conn, intval($row['id']));
-			$temp = array();
-			$temp['id'] = $product->getId();
-			$temp['name'] = $product->getName();
-			$temp['category_id'] = $product->getCategory_id();
-			$temp['photos'] = $product->getPhotos();
-			$temp['thumbnail_img'] = $product->getThumbnail_img();
-			$temp['unit_price'] = $product->getUnit_price();
-			$temp['discount'] = $product->getDiscount();
-			$temp['purchase_price'] = $product->getPurchase_price();
-			$temp['meta_title'] = $product->getMeta_title();
-			$temp['meta_description'] = $product->getMeta_description();
-			$temp['meta_img'] = $product->getMeta_img();
-			$temp['min_qtn'] = $product->getMin_qty();
-			$temp['published'] = $product->getPublished();
-
-			array_push($bestSellingProducts, $temp);
-		}
-
-		$best_temps = array();
-		$best_temps['id'] = 100;
-		$best_temps['parent_id'] = 100;
-		$best_temps['level'] =1;
-		$best_temps['name'] =  "Best Selling";
-		$best_temps['order_level'] =  0;
-		$best_temps['commision_rate'] = 0;
-		$best_temps['banner'] =null;
-		$best_temps['icon'] = null;
-		$best_temps['featured'] = 0;
-		$best_temps['top'] = 0;
-		$best_temps['digital'] = 0;
-		$best_temps['slug'] =  "Featured Products";
-		$best_temps['meta_title'] = null;
-		$best_temps['meta_description'] = null;
-		$best_temps['created_at'] = "10 Jul 2021";
-		$best_temps['updated_at'] = "10 Jul 2021";
-		$best_temps['products'] = $bestSellingProducts;
-		array_push($menuCategory, $best_temps);
-
-		// end Featured Products Fetch
-
-
-
-		//BEST selling  fetch Begin
-
-		$bestsellingProductsID = array();
-		$bestSellingProducts = array();
-		$category_stmts = "SELECT DISTINCT(id) FROM products  WHERE published = 1 ORDER BY `products`.`num_of_sale` DESC  LIMIT 8";
-		$menu_type_id_results = mysqli_query($this->conn, $category_stmts);
-
-		while ($row = mysqli_fetch_array($menu_type_id_results)) {
-
-			array_push($bestsellingProductsID, $row);
-		}
-
-		foreach ($bestsellingProductsID as $row) {
-			$product = new Product($this->conn, intval($row['id']));
-			$temp = array();
-			$temp['id'] = $product->getId();
-			$temp['name'] = $product->getName();
-			$temp['category_id'] = $product->getCategory_id();
-			$temp['photos'] = $product->getPhotos();
-			$temp['thumbnail_img'] = $product->getThumbnail_img();
-			$temp['unit_price'] = $product->getUnit_price();
-			$temp['discount'] = $product->getDiscount();
-			$temp['purchase_price'] = $product->getPurchase_price();
-			$temp['meta_title'] = $product->getMeta_title();
-			$temp['meta_description'] = $product->getMeta_description();
-			$temp['meta_img'] = $product->getMeta_img();
-			$temp['min_qtn'] = $product->getMin_qty();
-			$temp['published'] = $product->getPublished();
-
-			array_push($bestSellingProducts, $temp);
-		}
-
-		$best_temps = array();
-		$best_temps['id'] = 100;
-		$best_temps['parent_id'] = 100;
-		$best_temps['level'] =1;
-		$best_temps['name'] =  "Best Selling";
-		$best_temps['order_level'] =  0;
-		$best_temps['commision_rate'] = 0;
-		$best_temps['banner'] =null;
-		$best_temps['icon'] = null;
-		$best_temps['featured'] = 0;
-		$best_temps['top'] = 0;
-		$best_temps['digital'] = 0;
-		$best_temps['slug'] =  "Best Selling";
-		$best_temps['meta_title'] = null;
-		$best_temps['meta_description'] = null;
-		$best_temps['created_at'] = "10 Jul 2021";
-		$best_temps['updated_at'] = "10 Jul 2021";
-		$best_temps['products'] = $bestSellingProducts;
-		array_push($menuCategory, $best_temps);
-
-		// end Best Selling Fetch
 
 
 
