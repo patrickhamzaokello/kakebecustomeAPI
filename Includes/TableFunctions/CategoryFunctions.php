@@ -29,7 +29,6 @@ class CategoryFunctions
 		$total_pages = ceil($total_rows / $no_of_records_per_page);
 
 
-
 		$categoryids = array();
 		$menuCategory = array();
 		$itemRecords = array();

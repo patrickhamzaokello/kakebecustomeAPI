@@ -38,35 +38,145 @@ class SearchFunctions
         $query = mysqli_query($this->conn, $search_string);
         $result_count = mysqli_num_rows($query);
 
-        // display a message to the user to display the keywords
-        echo '<div class="right"><b><u>' . number_format($result_count) . '</u></b> results found</div>';
-        echo 'Your search for <i>"' . $display_words . '"</i><hr />';
+        $this->pageno = floatval($this->page);
+        $no_of_records_per_page = 10;
+        $offset = ($this->pageno - 1) * $no_of_records_per_page;
+
+
+        $total_rows = floatval(number_format($result_count));
+        $total_pages = ceil($total_rows / $no_of_records_per_page);
+
+
+        $itemRecords = array();
 
 
         // check if the search query returned any results
         if ($result_count > 0) {
 
-            // display the header for the display table
-            echo '<table class="search">';
+            $categoryids = array();
+            $menuCategory = array();
 
-            // loop though each of the results from the database and display them to the user
-            while ($row = mysqli_fetch_assoc($query)) {
-                echo '<tr>
-			<td><h3><a href="' . $row['name'] . '">' . $row['meta_title'] . '</a></h3></td>
-		</tr>
-		<tr>
-			<td>' . $row['meta_title'] . '</td>
-		</tr>
-		<tr>
-			<td><i>' . $row['meta_title'] . '</i></td>
-		</tr>';
+
+            $category_stmt = $search_string . " LIMIT " . $offset . "," . $no_of_records_per_page . "";
+
+            echo  $category_stmt;
+
+            $menu_type_id_result = mysqli_query($this->conn, $category_stmt);
+
+            while ($row = mysqli_fetch_array($menu_type_id_result)) {
+
+                array_push($categoryids, $row);
             }
 
-            // end the display of the table
-            echo '</table>';
-        } else
-            echo 'There were no results for your search. Try searching for something else.';
+            foreach ($categoryids as $row) {
+                $product = new Product($this->conn, intval($row['id']));
+                $temp = array();
+                $temp['id'] = $product->getId();
+                $temp['name'] = $product->getName();
+                $temp['category_id'] = $product->getCategory_id();
+                $temp['photos'] = $product->getPhotos();
+                $temp['thumbnail_img'] = $product->getThumbnail_img();
+                $temp['unit_price'] = $product->getUnit_price();
+                $temp['discount'] = $product->getDiscount();
+                $temp['purchase_price'] = $product->getPurchase_price();
+                $temp['meta_title'] = $product->getMeta_title();
+                $temp['meta_description'] = $product->getMeta_description();
+                $temp['meta_img'] = $product->getMeta_img();
+                $temp['min_qtn'] = $product->getMin_qty();
+                $temp['published'] = $product->getPublished();
+                array_push($menuCategory, $temp);
+            }
 
-        return $search_string;
+
+            $itemRecords["page"] = $this->pageno;
+            $itemRecords["searchTerm"] = $display_words;
+            $itemRecords["sectioned_category_results"] = $menuCategory;
+            $itemRecords["total_pages"] = $total_pages;
+            $itemRecords["total_results"] = $total_rows;
+
+
+            while ($row = mysqli_fetch_assoc($query)) {
+            }
+        }
+        return $itemRecords;
+    }
+
+
+    function searchFullText()
+    {
+
+        // SELECT * FROM products WHERE MATCH (name) AGAINST ('cooking oil')
+
+        // create the base variables for building the search query
+        $search_string = "SELECT * FROM products WHERE published = 1 AND ";
+        $display_words = "";
+
+        // format each of search keywords into the db query to be run
+        $search_string .= "MATCH (name) AGAINST ('".$this->query."')";
+        $display_words .= $this->query . ' ';
+
+        // run the query in the db and search through each of the records returned
+        $query = mysqli_query($this->conn, $search_string);
+        $result_count = mysqli_num_rows($query);
+
+        $this->pageno = floatval($this->page);
+        $no_of_records_per_page = 10;
+        $offset = ($this->pageno - 1) * $no_of_records_per_page;
+
+
+        $total_rows = floatval(number_format($result_count));
+        $total_pages = ceil($total_rows / $no_of_records_per_page);
+
+
+        $itemRecords = array();
+
+
+        // check if the search query returned any results
+        if ($result_count > 0) {
+
+            $categoryids = array();
+            $menuCategory = array();
+
+
+            $category_stmt = $search_string . " LIMIT " . $offset . "," . $no_of_records_per_page . "";
+
+
+            $menu_type_id_result = mysqli_query($this->conn, $category_stmt);
+
+            while ($row = mysqli_fetch_array($menu_type_id_result)) {
+
+                array_push($categoryids, $row);
+            }
+
+            foreach ($categoryids as $row) {
+                $product = new Product($this->conn, intval($row['id']));
+                $temp = array();
+                $temp['id'] = $product->getId();
+                $temp['name'] = $product->getName();
+                $temp['category_id'] = $product->getCategory_id();
+                $temp['photos'] = $product->getPhotos();
+                $temp['thumbnail_img'] = $product->getThumbnail_img();
+                $temp['unit_price'] = $product->getUnit_price();
+                $temp['discount'] = $product->getDiscount();
+                $temp['purchase_price'] = $product->getPurchase_price();
+                $temp['meta_title'] = $product->getMeta_title();
+                $temp['meta_description'] = $product->getMeta_description();
+                $temp['meta_img'] = $product->getMeta_img();
+                $temp['min_qtn'] = $product->getMin_qty();
+                $temp['published'] = $product->getPublished();
+                array_push($menuCategory, $temp);
+            }
+
+
+            $itemRecords["page"] = $this->pageno;
+            $itemRecords["searchTerm"] = $display_words;
+            $itemRecords["products"] = $menuCategory;
+            $itemRecords["total_pages"] = $total_pages;
+            $itemRecords["total_results"] = $total_rows;
+
+
+        
+        }
+        return $itemRecords;
     }
 }

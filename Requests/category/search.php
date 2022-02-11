@@ -20,7 +20,7 @@ $cat_search_query = (isset($_GET['query']) && $_GET['query']) ? $_GET['query'] :
 $category = new SearchFunctions($db,$cat_search_query,$cat_page);
 
 
-$result = $category->searchMain();
+$result = $category->searchFullText();
 
 if($result){    
     http_response_code(200);     
