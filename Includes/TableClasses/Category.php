@@ -6,6 +6,7 @@ class Category
     public $id, $parent_id, $level, $name, $order_level, $commision_rate, $banner, $icon, $featured, $top, $digital, $slug, $meta_title, $meta_description, $created_at, $updated_at;
     private $conn;
 
+    private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
 
 
     public function __construct($con, $id)
@@ -134,7 +135,10 @@ class Category
      */
     public function getBanner()
     {
-        return $this->banner;
+        $upload = new Upload($this->conn, $this->banner);
+        $filename = $this->imagePathRoot . $upload->getFile_name();
+
+        return $filename;
     }
 
     /**

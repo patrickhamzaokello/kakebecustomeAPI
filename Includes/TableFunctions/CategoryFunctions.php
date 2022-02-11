@@ -97,15 +97,15 @@ class CategoryFunctions
 
 		if ($this->pageno == 1) {
 
-			// get banner
+			// getSliderbanner
 			$banners = new BusinessSettings($this->conn, 84);
-			$remove_brackets = str_replace(array('[',']'),'',$banners->getHomeSliders());
-			$remove_braces = str_replace(array('"','"'),'',$remove_brackets);
+			$remove_brackets = str_replace(array('[', ']'), '', $banners->getHomeSliders());
+			$remove_braces = str_replace(array('"', '"'), '', $remove_brackets);
 			$str_arr = explode(",", $remove_braces);
 			$slidermeta_img_path = array();
 
 
-			foreach($str_arr as $imageID){
+			foreach ($str_arr as $imageID) {
 				$temp = array();
 				$upload = new Upload($this->conn, $imageID);
 				$filename = $this->imagePathRoot . $upload->getFile_name();
@@ -120,7 +120,54 @@ class CategoryFunctions
 			$slider_temps['sliderBanners'] = $slidermeta_img_path;
 			array_push($menuCategory, $slider_temps);
 
-			
+			//end getSliderbanner
+
+
+			//get featured categories
+
+			$feat_CatIDs = array();
+			$featuredCategory = array();
+
+
+			$category_featured_stmt = "SELECT id FROM categories  WHERE featured = 1;";
+			$feat_cat_id_result = mysqli_query($this->conn, $category_featured_stmt);
+
+			while ($row = mysqli_fetch_array($feat_cat_id_result)) {
+
+				array_push($feat_CatIDs, $row);
+			}
+
+			foreach ($feat_CatIDs as $row) {
+				$category = new Category($this->conn, intval($row['id']));
+				$temp = array();
+				$temp['id'] = $category->getId();
+				$temp['parent_id'] = $category->getParent_id();
+				$temp['level'] = $category->getLevel();
+				$temp['name'] =  $category->getName();
+				$temp['order_level'] =  $category->getOrder_level();
+				$temp['commision_rate'] = $category->getCommission_rate();
+				$temp['banner'] = $category->getBanner();
+				$temp['icon'] = $category->getIcon();
+				$temp['featured'] = $category->getFeatured();
+				$temp['top'] = $category->getTop();
+				$temp['digital'] = $category->getDigital();
+				$temp['slug'] =  $category->getSlug();
+				$temp['meta_title'] = $category->getMeta_title();
+				$temp['meta_description'] = $category->getMeta_description();
+				$temp['created_at'] = $category->getCreated_at();
+				$temp['updated_at'] = $category->getUpdated_at();
+				$temp['products'] = $category->getCategoryProducts();
+				array_push($featuredCategory, $temp);
+			}
+
+			$feat_Cat_temps = array();
+			$feat_Cat_temps['featuredCategories'] = $featuredCategory;
+			array_push($menuCategory, $feat_Cat_temps);
+
+
+			///end featuredCategories
+
+
 
 			// Todays Deal Begin
 
