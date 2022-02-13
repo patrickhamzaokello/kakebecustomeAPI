@@ -75,7 +75,8 @@ class CategoryFunctions
 	}
 
 
-	function searchHomePage(){
+	function searchHomePage()
+	{
 		$this->pageno = floatval($this->page);
 		$no_of_records_per_page = 10;
 		$offset = ($this->pageno - 1) * $no_of_records_per_page;
@@ -94,7 +95,8 @@ class CategoryFunctions
 
 
 
-		if($this->page == 1 ){
+		if ($this->page == 1) {
+
 			//  popular search Begin
 
 			$bestsellingProductsID = array();
@@ -115,7 +117,7 @@ class CategoryFunctions
 				$temp['count'] = $row['count'];
 				$temp['created_at'] = $row['created_at'];
 				$temp['updated_at'] = $row['updated_at'];
-		
+
 
 				array_push($bestSellingProducts, $temp);
 			}
@@ -172,18 +174,15 @@ class CategoryFunctions
 		}
 
 
-		//fetch other categories Begin
+		//fetch home categories Begin
 
-		$category_stmt = "SELECT DISTINCT(category_id) FROM products  WHERE published = 1 ORDER BY `products`.`num_of_sale` DESC LIMIT " . $offset . "," . $no_of_records_per_page . "";
-		$menu_type_id_result = mysqli_query($this->conn, $category_stmt);
+		$home_categories = new BusinessSettings($this->conn, 90);
+		$remove_brackets = str_replace(array('[', ']'), '', $home_categories->getHomeSliders());
+		$remove_braces = str_replace(array('"', '"'), '', $remove_brackets);
+		$str_arr = explode(",", $remove_braces);
 
-		while ($row = mysqli_fetch_array($menu_type_id_result)) {
-
-			array_push($categoryids, $row);
-		}
-
-		foreach ($categoryids as $row) {
-			$category = new Category($this->conn, intval($row['category_id']));
+		foreach ($str_arr as $row) {
+			$category = new Category($this->conn, intval($row));
 			$temp = array();
 			$temp['id'] = $category->getId();
 			$temp['parent_id'] = $category->getParent_id();
@@ -204,13 +203,18 @@ class CategoryFunctions
 			$temp['products'] = $category->getCategoryProducts();
 			array_push($menuCategory, $temp);
 		}
-		
 
 
-		$itemRecords["page"] = $this->pageno;
+
+		// $itemRecords["page"] = $this->pageno;
+		// $itemRecords["searchCategoriees"] = $menuCategory;
+		// $itemRecords["total_pages"] = $total_pages;
+		// $itemRecords["total_results"] = $total_rows;
+
+		$itemRecords["page"] = 1;
 		$itemRecords["searchCategoriees"] = $menuCategory;
-		$itemRecords["total_pages"] = $total_pages;
-		$itemRecords["total_results"] = $total_rows;
+		$itemRecords["total_pages"] = 1;
+		$itemRecords["total_results"] = 14;
 
 		return $itemRecords;
 	}
