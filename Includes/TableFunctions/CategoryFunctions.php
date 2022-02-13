@@ -95,11 +95,11 @@ class CategoryFunctions
 
 
 		if($this->page == 1 ){
-			// Todays Deal Begin
+			//  popular search Begin
 
 			$bestsellingProductsID = array();
 			$bestSellingProducts = array();
-			$category_stmts = "SELECT `id`, `query`, `count`, `created_at`, `updated_at` FROM `searches` ORDER BY count DESC LIMIT 10";
+			$category_stmts = "SELECT `id`, `query`, `count`, `created_at`, `updated_at` FROM `searches` ORDER BY count DESC LIMIT 30";
 			$menu_type_id_results = mysqli_query($this->conn, $category_stmts);
 
 			while ($row = mysqli_fetch_array($menu_type_id_results)) {
@@ -121,22 +121,60 @@ class CategoryFunctions
 			}
 
 
-			$best_temps = array();
-			$best_temps['name'] =  "Searches";		
-			$best_temps['tag'] =  "Whats Trending";	
-			$best_temps['searches'] = $bestSellingProducts;
 
 			$slider_temps = array();
-			$slider_temps['previousSearches'] = $best_temps;
+			$slider_temps['popularSearch'] = $bestSellingProducts;
 			array_push($menuCategory, $slider_temps);
 
-			// end Todays Deal  Fetch
+			// end popular search  Fetch
+
+
+			//get search featured categories
+
+			$feat_CatIDs = array();
+			$featuredCategory = array();
+
+
+			$category_featured_stmt = "SELECT id FROM categories  WHERE featured = 1;";
+			$feat_cat_id_result = mysqli_query($this->conn, $category_featured_stmt);
+
+			while ($row = mysqli_fetch_array($feat_cat_id_result)) {
+
+				array_push($feat_CatIDs, $row);
+			}
+
+			foreach ($feat_CatIDs as $row) {
+				$category = new Category($this->conn, intval($row['id']));
+				$temp = array();
+				$temp['id'] = $category->getId();
+				$temp['parent_id'] = $category->getParent_id();
+				$temp['level'] = $category->getLevel();
+				$temp['name'] =  $category->getName();
+				$temp['order_level'] =  $category->getOrder_level();
+				$temp['commision_rate'] = $category->getCommission_rate();
+				$temp['banner'] = $category->getBanner();
+				$temp['icon'] = $category->getIcon();
+				$temp['featured'] = $category->getFeatured();
+				$temp['top'] = $category->getTop();
+				$temp['digital'] = $category->getDigital();
+				$temp['slug'] =  $category->getSlug();
+				$temp['meta_title'] = $category->getMeta_title();
+				$temp['meta_description'] = $category->getMeta_description();
+				$temp['created_at'] = $category->getCreated_at();
+				$temp['updated_at'] = $category->getUpdated_at();
+				$temp['featuredCategoriesProduct'] = null;
+				array_push($featuredCategory, $temp);
+			}
+
+			$feat_Cat_temps = array();
+			$feat_Cat_temps['featuredCategories'] = $featuredCategory;
+			array_push($menuCategory, $feat_Cat_temps);
 		}
 
 
 		//fetch other categories Begin
 
-		$category_stmt = "SELECT DISTINCT(category_id) FROM products  WHERE published = 1 ORDER BY `products`.`featured` DESC LIMIT " . $offset . "," . $no_of_records_per_page . "";
+		$category_stmt = "SELECT DISTINCT(category_id) FROM products  WHERE published = 1 ORDER BY `products`.`num_of_sale` DESC LIMIT " . $offset . "," . $no_of_records_per_page . "";
 		$menu_type_id_result = mysqli_query($this->conn, $category_stmt);
 
 		while ($row = mysqli_fetch_array($menu_type_id_result)) {
@@ -170,7 +208,7 @@ class CategoryFunctions
 
 
 		$itemRecords["page"] = $this->pageno;
-		$itemRecords["categories"] = $menuCategory;
+		$itemRecords["searchCategoriees"] = $menuCategory;
 		$itemRecords["total_pages"] = $total_pages;
 		$itemRecords["total_results"] = $total_rows;
 
