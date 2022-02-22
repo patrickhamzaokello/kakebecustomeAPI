@@ -2,11 +2,11 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-include_once '../config/Database.php';
-include_once '../class/Order.php';
+include_once '../../../../admin/config.php';
+include_once '../Functions/Order.php';
 
 $database = new Database();
-$db = $database->getConnection();
+$db = $database->getConnString();
 
  
 $order = new Order($db);

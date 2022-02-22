@@ -1,9 +1,9 @@
 <?php
 //getting the database connection
-include_once '../config/Database.php';
+include_once '../../../../admin/config.php';
 
 $database = new Database();
-$conn = $database->getConnection();
+$conn = $database->getConnString();
 
 //an array to display response
 $response = array();

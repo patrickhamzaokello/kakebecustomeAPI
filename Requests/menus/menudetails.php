@@ -2,13 +2,18 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-include_once '../config/Database.php';
-include_once '../class/FoodMenu.php';
+include_once '../../Includes/config/Database.php';
+include_once '../../Includes/TableClasses/Category.php';
+include_once '../../Includes/TableClasses/Product.php';
+include_once '../../Includes/TableClasses/Upload.php';
+include_once '../../Includes/TableClasses/BusinessSettings.php';
+include_once '../../Includes/TableFunctions/ProductDetails.php';
 
 $database = new Database();
 $db = $database->getConnection();
+
  
-$menus = new FoodMenu($db);
+$menus = new ProductDetails($db);
 
 $menus->menu_id = (isset($_GET['id']) && $_GET['id']) ? $_GET['id'] : '0';
 
@@ -23,6 +28,6 @@ if($result){
         array("message" => "No item found.")
     );
 } 
-?>
+
 
 

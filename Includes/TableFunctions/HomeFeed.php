@@ -1,5 +1,5 @@
 <?php
-class CategoryFunctions
+class HomeFeed
 {
 
 	public $page;
