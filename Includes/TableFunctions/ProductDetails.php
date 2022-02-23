@@ -34,6 +34,7 @@ class ProductDetails
             $sibling_cat = array();
             $sibling_cat_sql = "SELECT id FROM `categories` WHERE parent_id = " . $this->input_menu_type_id . " ";
             $sibling_cat_sql_result = mysqli_query($this->conn, $sibling_cat_sql);
+            
             while ($row = mysqli_fetch_array($sibling_cat_sql_result)) {
                 array_push($sibling_cat, $row['id']);
             }
