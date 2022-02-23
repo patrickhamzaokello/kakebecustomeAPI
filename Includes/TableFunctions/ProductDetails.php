@@ -3,27 +3,15 @@
 class ProductDetails
 {
 
-    private $itemsTable = "tblmenu";
     private $ImageBasepath = "https://zodongofoods.com/admin/pages/";
-    public $menu_id;
-    public $menu_name;
-    public $price;
-    public $description;
-    public $menu_type_id;
-    public $menu_image;
-    public $ingredients;
-    public $menu_status;
-    public $created;
-    public $modified;
-    public $rating;
     public $input_menu_type_id;
     public $pageno;
-    private $conns;
+    private $conn;
 
 
     public function __construct($con)
     {
-        $this->conns = $con;
+        $this->conn = $con;
     }
 
 
@@ -33,83 +21,92 @@ class ProductDetails
 
         $itemRecords = array();
 
-        $this->menu_id = htmlspecialchars(strip_tags($_GET["page"]));
+        $page = htmlspecialchars(strip_tags($_GET["page"]));
         $this->input_menu_type_id = htmlspecialchars(strip_tags($_GET["category"]));
 
 
-        if ($this->menu_id) {
-            $this->pageno = floatval($this->menu_id);
+        if ($this->input_menu_type_id) {
+            $this->pageno = floatval($page);
             $no_of_records_per_page = 10;
             $offset = ($this->pageno - 1) * $no_of_records_per_page;
 
-            $sql = "SELECT COUNT(*) as count FROM " . $this->itemsTable . " WHERE menu_type_id = " . $this->input_menu_type_id . " limit 1";
-            $result = mysqli_query($this->conns, $sql);
+            $sql = "SELECT COUNT(*) as count FROM products WHERE published = 1 AND  category_id = " . $this->input_menu_type_id . " limit 1";
+            $result = mysqli_query($this->conn, $sql);
             $data = mysqli_fetch_assoc($result);
             $total_rows = floatval($data['count']);
             $total_pages = ceil($total_rows / $no_of_records_per_page);
 
 
-            $menu_type_sql = "SELECT * FROM tblmenutype WHERE id = " . $this->input_menu_type_id . " limit 1";
-            $menu_type_result = mysqli_query($this->conns, $menu_type_sql);
-            $menu_type_data = mysqli_fetch_assoc($menu_type_result);
-
-            $menu_type_name = $menu_type_data['name'];
-            $menu_type_description = $menu_type_data['description'];
-            $menu_type_imageCover = $menu_type_data['imageCover'];
-            $menu_type_created = $menu_type_data['created'];
-
-
             $itemRecords["page"] = $this->pageno;
-            $itemRecords["results"] = array();
+            $itemRecords["selected_category"] = array();
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
 
 
-            $stmt = $this->conns->prepare("SELECT menu_id,menu_name, price, description, menu_type_id, menu_image,backgroundImage,ingredients, menu_status, created, modified,rating FROM " . $this->itemsTable . " WHERE menu_type_id = " . $this->input_menu_type_id . " ORDER BY menu_id LIMIT " . $offset . "," . $no_of_records_per_page);
-        } else {
-            $stmt = $this->conns->prepare("SELECT menu_id,menu_name, price, description, menu_type_id, menu_image,backgroundImage, ingredients, menu_status, created, modified,rating FROM " . $this->itemsTable);
+            // get products id from the same cat
+            $same_cat_IDs = array();
+            $same_cat_stm = "SELECT `id` From products WHERE published = 1 AND  category_id = " . $this->input_menu_type_id . " ORDER BY num_of_sale DESC LIMIT " . $offset . "," . $no_of_records_per_page;
+            $same_cat_id_result = mysqli_query($this->conn, $same_cat_stm);
+            while ($row = mysqli_fetch_array($same_cat_id_result)) {
+                array_push($same_cat_IDs, $row['id']);
+            }
+
+
+            if ($this->pageno == 1) {
+
+                $menu_type_data = new Category($this->conn, $this->input_menu_type_id);
+
+                $cat_banner = $menu_type_data->getBanner();
+                $cat_created = $menu_type_data->getCreated_at();
+                $cat_name = $menu_type_data->getName();
+                $cat_metadescription = $menu_type_data->getMeta_description();
+
+                $sel_category = array();
+
+
+                if($menu_type_data){
+                    $menu_type_temp = array();
+                    $menu_type_temp['name'] = $cat_name;
+                    $menu_type_temp['meta_description'] = $cat_metadescription;
+                    $menu_type_temp['banner'] = $cat_banner;
+                    $menu_type_temp['banner'] = $cat_banner;
+                    $menu_type_temp['created'] = $cat_created;
+
+                    array_push($sel_category, $menu_type_temp);
+                }
+
+                $category = array();
+                $category['category_info'] = $sel_category;
+
+
+                array_push($itemRecords["selected_category"], $category);
+            }
+
+
+
+            foreach ($same_cat_IDs as $row) {
+                $product = new Product($this->conn,$row);
+                $temp = array();
+                $temp['id'] = $product->getId();
+                $temp['name'] = $product->getName();
+                $temp['category_id'] = $product->getCategory_id();
+                $temp['photos'] = $product->getPhotos();
+                $temp['thumbnail_img'] = $product->getThumbnail_img();
+                $temp['unit_price'] = $product->getUnit_price();
+                $temp['discount'] = $product->getDiscount();
+                $temp['purchase_price'] = $product->getPurchase_price();
+                $temp['meta_title'] = $product->getMeta_title();
+                $temp['meta_description'] = $product->getMeta_description();
+                $temp['meta_img'] = $product->getMeta_img();
+                $temp['min_qtn'] = $product->getMin_qty();
+                $temp['published'] = $product->getPublished();
+
+                array_push($itemRecords["selected_category"], $temp);
+            }
+
+
+
         }
-
-
-        $stmt->execute();
-        $stmt->bind_result($this->menu_id, $this->menu_name, $this->price, $this->description, $this->menu_type_id, $this->menu_image, $this->backgroundImage, $this->ingredients, $this->menu_status, $this->created, $this->modified, $this->rating);
-
-
-        if ($this->pageno == 1) {
-            $menu_type_temp = array();
-
-            $menu_type_temp['menu_name'] = $menu_type_name;
-            $menu_type_temp['description'] = $menu_type_description;
-            $menu_type_temp['menu_image'] = $this->ImageBasepath . $menu_type_imageCover;
-            $menu_type_temp['backgroundImage'] = $this->ImageBasepath . $menu_type_imageCover;
-            $menu_type_temp['created'] = $menu_type_created;
-
-
-            array_push($itemRecords["results"], $menu_type_temp);
-        }
-
-
-        while ($stmt->fetch()) {
-
-            $temp = array();
-
-            $temp['menu_id'] = $this->menu_id;
-            $temp['menu_name'] = $this->menu_name;
-            $temp['price'] = $this->price;
-            $temp['description'] = $this->description;
-            $temp['menu_type_id'] = $this->menu_type_id;
-            $temp['menu_image'] = $this->ImageBasepath . $this->menu_image;
-            $temp['backgroundImage'] = $this->ImageBasepath . $this->backgroundImage;
-            $temp['ingredients'] = $this->description;
-            $temp['menu_status'] = $this->menu_type_id;
-            $temp['created'] = $this->created;
-            $temp['modified'] = $this->modified;
-            $temp['rating'] = $this->rating;
-
-
-            array_push($itemRecords["results"], $temp);
-        }
-
 
         return $itemRecords;
     }
