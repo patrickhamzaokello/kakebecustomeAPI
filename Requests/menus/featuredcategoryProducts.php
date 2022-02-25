@@ -17,7 +17,7 @@ $menus = new ProductDetails($db);
 
 $menus->menu_id = (isset($_GET['id']) && $_GET['id']) ? $_GET['id'] : '0';
 
-$result = $menus->readMenuDetail();
+$result = $menus->parentCategoryProducts();
 
 if($result){    
     http_response_code(200);     
@@ -28,6 +28,5 @@ if($result){
         array("message" => "No item found.")
     );
 } 
-
 
 
