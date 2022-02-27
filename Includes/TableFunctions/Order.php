@@ -2,8 +2,8 @@
 class Order
 {
 
-	private $order_table = "tblorder";
-	private $order_detail_table = "tblorderdetails";
+	private $order_table = "orders";
+	private $order_detail_table = "order_details";
 	public $order_id;
 	public $order_address;
 	public $customer_id;
@@ -37,16 +37,16 @@ class Order
 	function create()
 	{
 
-		$stmt = $this->conn->prepare("INSERT INTO " . $this->order_table . "(`order_address`, `customer_id`, `order_date`, `total_amount`, `order_status`, `processed_by`) VALUES(?,?,?,?,?,?)");
+		$stmt = $this->conn->prepare("INSERT INTO " . $this->order_table . "(`shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`) VALUES(?,?,?,?,?,?)");
 
-		$this->order_address = htmlspecialchars(strip_tags($this->order_address));
+        $this->order_address = htmlspecialchars(strip_tags($this->order_address));
 		$this->customer_id = htmlspecialchars(strip_tags($this->customer_id));
 		$this->order_total_amount = htmlspecialchars(strip_tags($this->order_total_amount));
 		$this->order_status = htmlspecialchars(strip_tags($this->order_status));
 		$this->processed_by = htmlspecialchars(strip_tags($this->processed_by));
 		$this->order_date = htmlspecialchars(strip_tags($this->order_date));
 
-		$stmt->bind_param("sisiii", $this->order_address, $this->customer_id, $this->order_date, $this->order_total_amount, $this->order_status, $this->processed_by);
+		$stmt->bind_param("sisisi", $this->order_address, $this->customer_id, $this->order_date, $this->order_total_amount, $this->order_status, $this->processed_by);
 
 		if ($stmt->execute()) {
 
@@ -57,8 +57,8 @@ class Order
 			$this->exe_status = "failure";
 		}
 
-		$stmt_OrderDetail = $this->conn->prepare("INSERT INTO " . $this->order_detail_table . "(`order_id`, `menu_id`, `amount`, `no_of_serving`, `total_amount`) VALUES(?,?,?,?,?)");
-		$stmt_OrderDetail->bind_param("siiii", $this->order_id, $this->menu_id, $this->amount, $this->no_of_serving, $this->menu_total_amount);
+		$stmt_OrderDetail = $this->conn->prepare("INSERT INTO " . $this->order_detail_table . "(`order_id`, `product_id`, `price`, `quantity`) VALUES(?,?,?,?)");
+		$stmt_OrderDetail->bind_param("iiii", $this->order_id, $this->menu_id, $this->amount, $this->no_of_serving);
 
 
 

@@ -4,12 +4,13 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
- 
-include_once '../../../../admin/config.php';
-include_once '../Functions/Order.php';
+
+
+include_once '../../Includes/config/Database.php';
+include_once '../../Includes/TableFunctions/Order.php';
  
 $database = new Database();
-$db = $database->getConnString();
+$db = $database->getConnection();
  
 $items = new Order($db);
 $data = json_decode(file_get_contents("php://input"));
@@ -23,7 +24,7 @@ if(!empty($data->order_address) && !empty($data->customer_id) &&
     $items->order_status = $data->order_status;
     $items->processed_by = $data->processed_by;
     $items->orderItemList = $data->orderItemList;
-    $items->order_date = date('Y-m-d H:i:s'); 
+    $items->order_date = date('Y-m-d H:i:s');
 
 
     if($items->create()){         

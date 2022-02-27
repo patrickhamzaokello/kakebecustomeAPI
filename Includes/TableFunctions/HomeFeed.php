@@ -243,9 +243,10 @@ class HomeFeed
 
 			// getSliderbanner
 			$banners = new BusinessSettings($this->conn, 84);
-			$remove_brackets = str_replace(array('[', ']'), '', $banners->getHomeSliders());
-			$remove_braces = str_replace(array('"', '"'), '', $remove_brackets);
-			$str_arr = explode(",", $remove_braces);
+			// $remove_brackets = str_replace(array('[', ']'), '', $banners->getHomeSliders());
+			// $remove_braces = str_replace(array('"', '"'), '', $remove_brackets);
+			// $str_arr = explode(",", $remove_braces);
+			$str_arr = json_decode( $banners->getHomeSliders());
 			$slidermeta_img_path = array();
 
 
