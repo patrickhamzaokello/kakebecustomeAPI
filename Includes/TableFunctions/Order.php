@@ -103,7 +103,7 @@ class Order
 			$offset = ($this->pageno - 1) * $no_of_records_per_page;
 
 
-			$sql = "SELECT COUNT(*) as count FROM " . $this->order_table . " WHERE customer_id = " . $this->userOrderid . " limit 1";
+			$sql = "SELECT COUNT(*) as count FROM " . $this->order_table . " WHERE user_id = " . $this->userOrderid . " limit 1";
 			$result = mysqli_query($this->conn, $sql);
 			$data = mysqli_fetch_assoc($result);
 			$total_rows = floatval($data['count']);
@@ -116,10 +116,10 @@ class Order
 			$itemRecords["total_results"] = $total_rows;
 
 
-			$stmt = $this->conn->prepare("SELECT `order_id`, `order_address`, `customer_id`, `order_date`, `total_amount`, `order_status`, `processed_by` FROM " . $this->order_table . " WHERE customer_id = " . $this->userOrderid . " ORDER BY order_id DESC  LIMIT " . $offset . "," . $no_of_records_per_page);
+			$stmt = $this->conn->prepare("SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`  FROM " . $this->order_table . " WHERE user_id = " . $this->userOrderid . " ORDER BY id DESC  LIMIT " . $offset . "," . $no_of_records_per_page);
 		} else {
 			// echo "working b";
-			$stmt = $this->conn->prepare("SELECT `order_id`, `order_address`, `customer_id`, `order_date`, `total_amount`, `order_status`, `processed_by` FROM " . $this->order_table." ORDER BY order_id DESC" );
+			$stmt = $this->conn->prepare("SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed` FROM " . $this->order_table." ORDER BY id DESC" );
 		}
 
 
@@ -171,9 +171,7 @@ class Order
 	function delete()
 	{
 
-		$stmt = $this->conn->prepare("
-		DELETE FROM " . $this->order_table . " 
-		WHERE id = ?");
+		$stmt = $this->conn->prepare(" DELETE FROM " . $this->order_table . " WHERE id = ?");
 
 		$this->id = htmlspecialchars(strip_tags($this->id));
 
