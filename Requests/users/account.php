@@ -1,9 +1,9 @@
 <?php
 //getting the database connection
-include_once '../../../../admin/config.php';
+include_once '../../Includes/config/Database.php';
 
 $database = new Database();
-$conn = $database->getConnString();
+$conn = $database->getConnection();
 
 //an array to display response
 $response = array();
@@ -18,23 +18,19 @@ if (isset($_GET['apicall'])) {
                 case 'signup':
 
                         //checking the parameters required are available or not 
-                        if (isTheseParametersAvailable(array('full_name', 'username', 'email', 'user_phone', 'password', 'location_address'))) {
+                        if (isTheseParametersAvailable(array('full_name', 'email', 'user_phone', 'password'))) {
 
                                 //getting the values 
                                 $full_name = $_POST['full_name'];
-                                $username = $_POST['username'];
                                 $email = $_POST['email'];
                                 $user_phone = $_POST['user_phone'];
                                 $password = md5($_POST['password']);
-                                $location_address = $_POST['location_address'];
-                                $profileimage = "https://media.istockphoto.com/vectors/creative-vector-seamless-pattern-vector-id975589890?k=20&m=975589890&s=612x612&w=0&h=2acWhh0ASGWI7vRqofWthsp2UqagVUCQqdmUQLyAs3Y=";
-
-
+                                $verification_code = "mobile_". rand(100000, 999999);
 
                                 //checking if the user is already exist with this username or email
                                 //as the email and username should be unique for every user 
-                                $stmt = $conn->prepare("SELECT customer_id FROM tblcustomer WHERE customer_username = ? OR customer_email = ?");
-                                $stmt->bind_param("ss", $username, $email);
+                                $stmt = $conn->prepare("SELECT id FROM users WHERE phone = ? OR email = ?");
+                                $stmt->bind_param("ss", $user_phone, $email);
                                 $stmt->execute();
                                 $stmt->store_result();
 
@@ -47,17 +43,17 @@ if (isset($_GET['apicall'])) {
                                 } else {
 
                                         //if user is new creating an insert query 
-                                        $stmt = $conn->prepare("INSERT INTO tblcustomer (customer_full_name, customer_username, customer_email, customer_phone_number, customer_address, profile_image, customer_password) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                                        $stmt->bind_param("sssssss", $full_name, $username, $email, $user_phone, $location_address, $profileimage, $password);
+                                        $stmt = $conn->prepare("INSERT INTO users (name, email,password, phone,verification_code) VALUES (?, ?, ?, ?, ?)");
+                                        $stmt->bind_param("sssss", $full_name, $email, $password, $user_phone, $verification_code);
 
                                         //if the user is successfully added to the database 
                                         if ($stmt->execute()) {
 
                                                 //fetching the user back 
-                                                $stmt = $conn->prepare("SELECT customer_id, customer_full_name, customer_username, customer_email, customer_phone_number, customer_address, profile_image FROM tblcustomer WHERE customer_username = ? OR customer_email = ?");
-                                                $stmt->bind_param("ss", $username, $email);
+                                                $stmt = $conn->prepare("SELECT id, name, email, phone FROM users WHERE phone = ? OR email = ?");
+                                                $stmt->bind_param("ss", $user_phone, $email);
                                                 $stmt->execute();
-                                                $stmt->bind_result($customer_id, $customer_full_name, $customer_username, $customer_email, $customer_phone_number, $customer_address, $profile_image);
+                                                $stmt->bind_result($customer_id, $customer_full_name, $customer_email, $customer_phone_number);
 
                                                 $stmt->fetch();
 
@@ -65,11 +61,8 @@ if (isset($_GET['apicall'])) {
                                                 $user = array(
                                                         'id' => $customer_id,
                                                         'fullname' => $customer_full_name,
-                                                        'username' => $customer_username,
                                                         'email' => $customer_email,
                                                         'phone' => $customer_phone_number,
-                                                        'address' => $customer_address,
-                                                        'profileimage' => $profile_image
                                                 );
 
 
@@ -101,10 +94,10 @@ if (isset($_GET['apicall'])) {
                                 $check_email = Is_email($username);
                                 if ($check_email) {
                                         // email & password combination 
-                                        $stmt = $conn->prepare("SELECT customer_id, customer_full_name, customer_username, customer_email, customer_phone_number, customer_address, profile_image FROM tblcustomer WHERE customer_email = ? AND customer_password = ?");
+                                        $stmt = $conn->prepare("SELECT id, name, email, phone FROM users WHERE email = ? AND password = ?");
                                 } else {
                                         // username & password combination
-                                        $stmt = $conn->prepare("SELECT customer_id, customer_full_name, customer_username, customer_email, customer_phone_number, customer_address, profile_image FROM tblcustomer WHERE customer_username = ? AND customer_password = ?");
+                                        $stmt = $conn->prepare("SELECT id, name, email, phone FROM users WHERE phone = ? AND password = ?");
                                 }
 
                                 //creating the query 
@@ -117,17 +110,14 @@ if (isset($_GET['apicall'])) {
                                 //if the user exist with given credentials 
                                 if ($stmt->num_rows > 0) {
 
-                                        $stmt->bind_result($customer_id, $customer_full_name, $customer_username, $customer_email, $customer_phone_number, $customer_address, $profile_image);
+                                        $stmt->bind_result($customer_id, $customer_full_name, $customer_email, $customer_phone_number);
                                         $stmt->fetch();
 
                                         $user = array(
                                                 'id' => $customer_id,
                                                 'fullname' => $customer_full_name,
-                                                'username' => $customer_username,
                                                 'email' => $customer_email,
                                                 'phone' => $customer_phone_number,
-                                                'address' => $customer_address,
-                                                'profileimage' => $profile_image
                                         );
 
                                         $response['error'] = false;
