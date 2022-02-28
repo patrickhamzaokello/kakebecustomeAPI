@@ -38,7 +38,7 @@ if (isset($_GET['apicall'])) {
                                 //if the user already exist in the database 
                                 if ($stmt->num_rows > 0) {
                                         $response['error'] = true;
-                                        $response['message'] = 'User already registered';
+                                        $response['message'] = 'User already exist, try another email';
                                         $stmt->close();
                                 } else {
 
@@ -126,7 +126,7 @@ if (isset($_GET['apicall'])) {
                                 } else {
                                         //if the user not found 
                                         $response['error'] = true;
-                                        $response['message'] = 'Invalid username or password';
+                                        $response['message'] = 'Your Credentials are invalid!';
                                 }
                         }
                         break;
