@@ -1,0 +1,5 @@
+RewriteEngine On    # Turn on the rewriting engine
+RewriteRule ^userAddress$ userAddress.php [NC,L]
+RewriteRule ^userAddress/([0-9_-]*)$ userAddress.php?userId=$1&page=$1 [NC,L]
+RewriteRule ^create_address$ create_address.php [NC,L]
+RewriteRule ^create_address/([0-9_-]*)$ create_address.php?userId=$1&page=$1 [NC,L]
