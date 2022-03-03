@@ -104,14 +104,17 @@ class AddressHandler
             $total_rows = floatval($data['count']);
             $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-            $name_sql = "SELECT name FROM users WHERE id = " .$this->userID . " limit 1";
+            $name_sql = "SELECT name, email FROM users WHERE id = " .$this->userID . " limit 1";
             $name_result = mysqli_query($this->conn, $name_sql);
             $name_data = mysqli_fetch_assoc($name_result);
             $name = $name_data['name'];
+            $email = $name_data['email'];
+
+
 
 
             $itemRecords["page"] = $this->pageno;
-            $itemRecords["results"] = array();
+            $itemRecords["user_address"] = array();
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
 
@@ -128,19 +131,15 @@ class AddressHandler
                 $temp = array();
 
                 $temp['id'] = $this->id;
-                $temp['user_id'] = $name;
+                $temp['user_id'] = $this->user_id;
+                $temp['username'] = $name;
+                $temp['email'] = $email;
                 $temp['address'] = $this->address;
                 $temp['country'] = $this->country;
                 $temp['city'] = $this->city;
-                $temp['longitude'] = $this->longitude;
-                $temp['latitude'] = $this->latitude;
-                $temp['postal_code'] = $this->postal_code;
                 $temp['phone'] = $this->phone;
-                $temp['set_default'] = $this->set_default;
-                $temp['created_at']= $this->created_at;
-                $temp['updated_at'] = $this->updated_at;
 
-                array_push($itemRecords["results"], $temp);
+                array_push($itemRecords["user_address"], $temp);
             }
 
 
