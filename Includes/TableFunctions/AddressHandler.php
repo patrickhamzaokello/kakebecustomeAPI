@@ -104,11 +104,17 @@ class AddressHandler
             $total_rows = floatval($data['count']);
             $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-            $name_sql = "SELECT name, email FROM users WHERE id = " .$this->userID . " limit 1";
-            $name_result = mysqli_query($this->conn, $name_sql);
-            $name_data = mysqli_fetch_assoc($name_result);
-            $name = $name_data['name'];
-            $email = $name_data['email'];
+
+            if($total_rows > 0){
+                $name_sql = "SELECT name, email FROM users WHERE id = " . $this->userID . " limit 1";
+                $name_result = mysqli_query($this->conn, $name_sql);
+                $name_data = mysqli_fetch_assoc($name_result);
+                $name = $name_data['name'];
+                $email = $name_data['email'];
+            } else {
+                $name = null;
+                $email = null;
+            }
 
 
 
@@ -118,12 +124,9 @@ class AddressHandler
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
 
-            $stmt = $this->conn->prepare("SELECT `id`, `user_id`, `address`, `country`, `city`, `longitude`, `latitude`, `postal_code`, `phone`, `set_default`, `created_at`, `updated_at` FROM addresses WHERE user_id = ".$this->userID." ORDER BY id LIMIT ".$offset.",".$no_of_records_per_page."");
+            $stmt = $this->conn->prepare("SELECT `id`, `user_id`, `address`, `country`, `city`, `longitude`, `latitude`, `postal_code`, `phone`, `set_default`, `created_at`, `updated_at` FROM addresses WHERE user_id = " . $this->userID . " ORDER BY id LIMIT " . $offset . "," . $no_of_records_per_page . "");
             $stmt->execute();
             $stmt->bind_result($this->id, $this->user_id, $this->address, $this->country, $this->city, $this->longitude, $this->latitude, $this->postal_code, $this->phone, $this->set_default, $this->created_at, $this->updated_at);
-
-
-
 
 
             while ($stmt->fetch()) {
@@ -132,8 +135,8 @@ class AddressHandler
 
                 $temp['id'] = $this->id;
                 $temp['user_id'] = $this->user_id;
-                $temp['username'] = $name;
-                $temp['email'] = $email;
+                $temp['username'] = $name != null ? $name :"pk";
+                $temp['email'] = $email != null ? $name :"pk";
                 $temp['address'] = $this->address;
                 $temp['country'] = $this->country;
                 $temp['city'] = $this->city;
