@@ -7,27 +7,24 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 
 include_once '../../Includes/config/Database.php';
-include_once '../../Includes/TableFunctions/Order.php';
+include_once '../../Includes/TableFunctions/AddressHandler.php';
  
 $database = new Database();
 $db = $database->getConnection();
- 
-$items = new Order($db);
+
+$address = new AddressHandler($db);
 $data = json_decode(file_get_contents("php://input"));
 
-if(!empty($data->order_address) && !empty($data->customer_id) &&
-!empty($data->total_amount) && !empty($data->order_status)&& !empty($data->processed_by) && !empty($data->orderItemList)){   
-  
-    $items->order_address = $data->order_address;
-    $items->customer_id = $data->customer_id;
-    $items->order_total_amount = $data->total_amount;
-    $items->order_status = $data->order_status;
-    $items->processed_by = $data->processed_by;
-    $items->orderItemList = $data->orderItemList;
-    $items->order_date = date('Y-m-d H:i:s');
+if(!empty($data->user_id) && !empty($data->district) &&
+!empty($data->location) && !empty($data->phone)){
+
+    $address->user_id = $data->user_id;
+    $address->district = $data->district;
+    $address->location = $data->location;
+    $address->phone = $data->phone;
 
 
-    if($items->create()){         
+    if($address->create()){
         http_response_code(201);  
         $response['error'] = false;
         $response['message'] = 'Order was created.';
