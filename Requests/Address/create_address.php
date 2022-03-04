@@ -27,19 +27,19 @@ if(!empty($data->user_id) && !empty($data->district) &&
     if($address->create()){
         http_response_code(201);  
         $response['error'] = false;
-        $response['message'] = 'Order was created.';
+        $response['message'] = 'Address created.';
         echo json_encode($response);
       
     } else{         
         http_response_code(503);   
         $response['error'] = true;
-        $response['message'] = 'Unable to create Order.';     
+        $response['message'] = 'Unable to create Address.';
         echo json_encode($response);
     }
 }else{    
     http_response_code(400);    
     $response['error'] = true;
-    $response['message'] = 'Unable to create item. Data is incomplete.';     
+    $response['message'] = 'Unable to create Address. Data is incomplete.';
     echo json_encode($response);
 }
 ?>
