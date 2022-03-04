@@ -22,7 +22,7 @@ class AddressHandler
     function create()
     {
 
-        $stmt = $this->conn->prepare("SELECT `user_id`, `address`, `city`, `phone` FROM " . $this->address_table . " WHERE user_id = ? AND (address = ? OR city = ? OR phone = ? )");
+        $stmt = $this->conn->prepare("SELECT `user_id`, `address`, `city`, `phone` FROM " . $this->address_table . " WHERE user_id = ? AND (address = ? AND city = ? AND phone = ? )");
         $stmt->bind_param("isss",  $this->user_id, $this->location, $this->district, $this->phone);
         $stmt->execute();
         $stmt->store_result();
