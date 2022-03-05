@@ -133,11 +133,15 @@ class Order
 			while ($stmt->fetch()) {
 
 				$temp = array();
-	
+
+                $data_address = json_decode($this->order_address);
+                $phpdate = strtotime($this->order_date);
+                $mysqldate = date('d M Y h:i A', $phpdate);
+
 				$temp['order_id'] = $this->order_id;
-				$temp['order_address'] = $this->order_address;
+				$temp['order_address'] = $data_address->country ." , ". $data_address->city .", ".  $data_address->address ." , ".$data_address->phone." , ".$data_address->email;
 				$temp['customer_id'] = $this->customer_id;
-				$temp['order_date'] = $this->order_date;
+				$temp['order_date'] = $mysqldate;
 				$temp['total_amount'] = $this->total_amount;
 				$temp['order_status'] = $this->order_status;
 				$temp['processed_by'] = $this->processed_by;
@@ -152,7 +156,7 @@ class Order
 				$temp['customer_id'] = 0;
 				$temp['order_date'] = "null";
 				$temp['total_amount'] = 0;
-				$temp['order_status'] = 0;
+				$temp['order_status'] = "null";
 				$temp['processed_by'] = 0;
 	
 				array_push($itemRecords["results"], $temp);
