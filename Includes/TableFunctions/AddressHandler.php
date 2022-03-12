@@ -81,7 +81,6 @@ class AddressHandler
             $total_rows = floatval($data['count']);
             $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-
             if($total_rows > 0){
                 $name_sql = "SELECT name, email FROM users WHERE id = " . $userID . " limit 1";
                 $name_result = mysqli_query($this->conn, $name_sql);
@@ -112,8 +111,8 @@ class AddressHandler
 
                 $temp['id'] = $this->id;
                 $temp['user_id'] = $this->user_id;
-                $temp['username'] = $name != null ? $name :"pk";
-                $temp['email'] = $email != null ? $name :"pk";
+                $temp['username'] = $name != null ? $name :"kakebe_user";
+                $temp['email'] = $email != null ? $email :"user@shopkakebe.com";
                 $temp['address'] = $this->address;
                 $temp['country'] = $this->country;
                 $temp['city'] = $this->city;
