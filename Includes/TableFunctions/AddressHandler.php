@@ -8,9 +8,17 @@ class AddressHandler
     public $district;
     public $location;
     public $phone;
-
     private $conn;
     private $exe_status;
+    private $address;
+    private $country;
+    private $city;
+    private $set_default;
+    private $created_at;
+    private $updated_at;
+    private $longitude;
+    private $latitude;
+    private $postal_code;
 
 
     public function __construct($con)
@@ -117,6 +125,12 @@ class AddressHandler
                 $temp['country'] = $this->country;
                 $temp['city'] = $this->city;
                 $temp['phone'] = $this->phone;
+                $temp['set_default'] = $this->set_default;
+                $temp['created_at'] = $this->created_at;
+                $temp['updated_at'] = $this->updated_at;
+                $temp['longitude'] = $this->longitude;
+                $temp['latitude'] = $this->latitude;
+                $temp['postal_code'] = $this->postal_code;
 
                 array_push($itemRecords["user_address"], $temp);
             }

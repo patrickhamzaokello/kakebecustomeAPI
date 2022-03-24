@@ -29,7 +29,9 @@ if(!empty($data->order_address) && !empty($data->customer_id) &&
     $items->order_status = $data->order_status;
     $items->processed_by = $data->processed_by;
     $items->orderItemList = $data->orderItemList;
-    $items->order_date = date('Y-m-d H:i:s');
+    $current_Time_InSeconds = time();
+    $items->order_date = date('Y-m-d H:i:s', $current_Time_InSeconds );
+
 
 
     if($items->create()){         

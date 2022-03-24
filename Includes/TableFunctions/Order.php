@@ -34,19 +34,24 @@ class Order
 		$this->exe_status = "failure";
 	}
 
-	function create()
+function create()
 	{
 
-		$stmt = $this->conn->prepare("INSERT INTO " . $this->order_table . "(`shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`) VALUES(?,?,?,?,?,?)");
+		$stmt = $this->conn->prepare("INSERT INTO " . $this->order_table . "(`shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`, `payment_type`, `code`, `date`) VALUES(?,?,?,?,?,?,?,?,?)");
 
-        $this->order_address = htmlspecialchars(strip_tags($this->order_address));
+        $this->order_address = strip_tags($this->order_address);
 		$this->customer_id = htmlspecialchars(strip_tags($this->customer_id));
 		$this->order_total_amount = htmlspecialchars(strip_tags($this->order_total_amount));
 		$this->order_status = htmlspecialchars(strip_tags($this->order_status));
 		$this->processed_by = htmlspecialchars(strip_tags($this->processed_by));
 		$this->order_date = htmlspecialchars(strip_tags($this->order_date));
+        $cashonDelivery =  "cash_on_delivery";
 
-		$stmt->bind_param("sisisi", $this->order_address, $this->customer_id, $this->order_date, $this->order_total_amount, $this->order_status, $this->processed_by);
+        $currentTimeinSeconds = time();
+        $currentDate = date('Ymd', $currentTimeinSeconds);
+        $code = $currentDate."-".$currentTimeinSeconds;
+
+        $stmt->bind_param("sisisissi", $this->order_address, $this->customer_id, $this->order_date, $this->order_total_amount, $this->order_status, $this->processed_by,$cashonDelivery,$code,$currentTimeinSeconds );
 
 		if ($stmt->execute()) {
 
