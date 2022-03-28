@@ -13,6 +13,8 @@
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <title>Real Time Orders</title>
     <style type="text/css">
+
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +23,7 @@
 
         body {
             background-color: #32312f;
-            font-family: "Montserrat";
+            font-family: 'Montserrat', sans-serif;
         }
 
         .table-container {
