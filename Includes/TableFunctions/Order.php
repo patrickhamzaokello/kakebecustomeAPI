@@ -173,49 +173,15 @@ class Order
     function readTodaysOrders()
     {
 
-
         $itemRecords = array();
 
-        $stmt = $this->conn->prepare("SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`  FROM " . $this->order_table . " ORDER BY `orders`.`created_at` DESC  LIMIT 10 ");
 
+        $orders_del = mysqli_query($this->conn, "SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`  FROM " . $this->order_table . " ORDER BY `orders`.`created_at` DESC  LIMIT 10  ");
 
-        $stmt->execute();
-        $stmt->store_result();
-        $stmt->bind_result($this->order_id, $this->order_address, $this->customer_id, $this->order_date, $this->total_amount, $this->order_status, $this->processed_by);
+        while ($row = mysqli_fetch_array($orders_del)) {
 
-        $numberofrows = $stmt->num_rows;
+            array_push($itemRecords, $row);
 
-        if ($numberofrows > 0) {
-            while ($stmt->fetch()) {
-
-                $temp = array();
-
-                $data_address = json_decode($this->order_address);
-                $phpdate = strtotime($this->order_date);
-                $mysqldate = date('d M Y h:i A', $phpdate);
-
-                $temp['order_id'] = $this->order_id;
-                $temp['order_address'] = $data_address->country . " , " . $data_address->city . ", " . $data_address->address . " , " . $data_address->phone . " , " . $data_address->email;
-                $temp['customer_id'] = $this->customer_id;
-                $temp['order_date'] = $mysqldate;
-                $temp['total_amount'] = $this->total_amount;
-                $temp['order_status'] = $this->order_status;
-                $temp['processed_by'] = $this->processed_by;
-
-                array_push($itemRecords, $temp);
-            }
-        } else {
-            $temp = array();
-
-            $temp['order_id'] = 0;
-            $temp['order_address'] = "null";
-            $temp['customer_id'] = 0;
-            $temp['order_date'] = "null";
-            $temp['total_amount'] = 0;
-            $temp['order_status'] = "null";
-            $temp['processed_by'] = 0;
-
-            array_push($itemRecords, $temp);
         }
 
 
