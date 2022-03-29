@@ -179,9 +179,9 @@ $result = $order->readTodaysOrders();
                 <th>Status</th>
             </tr>
             </thead>
-            <?php if ($result) : ?>
 
                 <tbody>
+                <?php if ($result) : ?>
 
 
                 <?php
@@ -214,10 +214,12 @@ $result = $order->readTodaysOrders();
 
                 <?php endforeach ?>
 
-                </tbody>
-            <?php else : ?>
+                <?php else : ?>
                 No Orders Left
             <?php endif ?>
+
+                </tbody>
+           
         </table>
     </div>
 
