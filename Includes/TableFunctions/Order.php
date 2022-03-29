@@ -176,7 +176,7 @@ class Order
         $itemRecords = array();
 
 
-        $orders_del = mysqli_query($this->conn, "SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`  FROM " . $this->order_table . " WHERE `delivery_status` != 'delivered' ORDER BY `orders`.`created_at` DESC  LIMIT 10  ");
+        $orders_del = mysqli_query($this->conn, "SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`  FROM " . $this->order_table . " WHERE (DATE(`created_at`) = CURDATE()) AND (`delivery_status` != 'delivered') ORDER BY `orders`.`created_at` DESC  LIMIT 10  ");
 
         while ($row = mysqli_fetch_array($orders_del)) {
 
