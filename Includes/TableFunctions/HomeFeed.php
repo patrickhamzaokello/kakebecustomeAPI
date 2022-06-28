@@ -3,6 +3,7 @@ class HomeFeed
 {
 
 	public $page;
+    public $version = 1;
 	private $conn;
 	private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
 
@@ -262,6 +263,7 @@ class HomeFeed
 
 
 			$slider_temps = array();
+            $slider_temps['header_ad'] = "https://d2t03bblpoql2z.cloudfront.net/uploads/all/a8LWbZP0CdfEu5fw7uUPuSAaq6oYlC4jI7EtA6tq.gif";
 			$slider_temps['sliderBanners'] = $slidermeta_img_path;
 			array_push($menuCategory, $slider_temps);
 
@@ -515,7 +517,7 @@ class HomeFeed
 			array_push($menuCategory, $temp);
 		}
 
-
+        $itemRecords["version"] = $this->version;
 		$itemRecords["page"] = $this->pageno;
 		$itemRecords["categories"] = $menuCategory;
 		$itemRecords["total_pages"] = $total_pages;
