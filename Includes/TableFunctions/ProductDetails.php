@@ -81,7 +81,7 @@ class ProductDetails
             // add the last bracket
             $prod_string .=")";
 
-            echo $prod_string;
+//            echo $prod_string;
 
 
             // run the query in the db and search through each of the category returned
