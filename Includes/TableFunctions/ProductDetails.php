@@ -41,7 +41,7 @@ class ProductDetails
             if($test_row['id'] == 0){
                 array_push($sibling_cat, $this->categoryID);
             } else {
-
+                // level 1 shop_category [product] selection
                 $sibling_cat_sql = "SELECT id FROM `categories` WHERE parent_id = " . $this->categoryID . " ";
                 $sibling_cat_sql_result = mysqli_query($this->conn, $sibling_cat_sql);
 
@@ -49,7 +49,27 @@ class ProductDetails
                     array_push($sibling_cat, $row['id']);
                 }
 
+                // like a Betty :)
+
+                // level 2 shop_category [product] selection
+                $level2_cat_string = "SELECT `id` From categories WHERE ";
+                foreach ($sibling_cat as $lel_cat_id) {
+                    $level2_cat_string .= "parent_id = " . $lel_cat_id . " OR ";
+                }
+
+                //remove the last OR
+                $level2_cat_string = substr($level2_cat_string, 0, strlen($level2_cat_string) - 4);
+                // add the last bracket
+
+                $prod_cat_id = mysqli_query($this->conn, $level2_cat_string);
+                while ($row = mysqli_fetch_array($prod_cat_id)) {
+                    array_push($sibling_cat, $row['id']);
+                }
+                //end
+
             }
+
+            // SELECT `id` From products WHERE published = 1 AND (category_id = 100 OR category_id = 101 OR category_id = 102)
 
             $prod_string = "SELECT `id` From products WHERE published = 1 AND (";
             foreach ($sibling_cat as $cat_id) {
@@ -59,7 +79,10 @@ class ProductDetails
             //remove the last OR
             $prod_string = substr($prod_string, 0, strlen($prod_string) - 4);
             // add the last bracket
-            $prod_string .=")"; 
+            $prod_string .=")";
+
+            echo $prod_string;
+
 
             // run the query in the db and search through each of the category returned
             $prod_id = mysqli_query($this->conn, $prod_string);
