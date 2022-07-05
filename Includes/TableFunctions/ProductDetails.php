@@ -211,7 +211,8 @@ class ProductDetails
                     $temp['meta_img'] = $product->getMeta_img();
                     $temp['min_qtn'] = $product->getMin_qty();
                     $temp['published'] = $product->getPublished();
-
+                    $temp['attributes'] = $product->getAttributes();
+                    $temp['choice_options'] = $product->getChoiceOptions();
 
                     array_push($itemRecords["selectedProduct"], $temp);
 

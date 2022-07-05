@@ -209,4 +209,26 @@ class Product
     {
         return $this->discount;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChoiceOptions()
+    {
+        $attr_obj = json_decode($this->choice_options);
+        foreach($attr_obj as $attr){
+            $id = $attr->{'attribute_id'};
+            $attribute_title = new Attributes($id,$this->conn);
+            $attr->{'attribute_id'} = $attribute_title->getName();
+        }
+        return  $attr_obj;
+    }
 }
