@@ -1,10 +1,12 @@
 <?php
 // http://localhost/projects/KakebeAPI/Requests/category/sectionedCategory.php?page=2
 
-
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 include_once '../../Includes/config/Database.php';
+include_once '../../Includes/TableClasses/FlashDeals.php';
+include_once '../../Includes/TableClasses/FlashDealsProducts.php';
 include_once '../../Includes/TableClasses/Category.php';
 include_once '../../Includes/TableClasses/Product.php';
 include_once '../../Includes/TableClasses/Upload.php';
