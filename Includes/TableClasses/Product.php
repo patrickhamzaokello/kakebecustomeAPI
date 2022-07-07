@@ -207,8 +207,22 @@ class Product
      */ 
     public function getDiscount()
     {
+        if($this->discount_type == "percent"){
+            $discountprice = $this->unit_price  * $this->discount/100;
+            $this->discount = $this->unit_price  - $discountprice;
+
+        } else if($this->discount_type == "amount") {
+            $this->discount = $this->unit_price  - $this->discount;
+        } else {
+            $this->discount = $this->unit_price;
+        }
+
         return $this->discount;
     }
+
+
+
+
 
     /**
      * @return mixed

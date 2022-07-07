@@ -317,7 +317,7 @@ class HomeFeed
             $featuredCategory = array();
 
 
-            $category_featured_stmt = "SELECT id FROM flash_deals WHERE status = 1 & featured = 1  Limit 1";
+            $category_featured_stmt = "SELECT id FROM flash_deals WHERE status = 1 ORDER BY id DESC";
             $feat_cat_id_result = mysqli_query($this->conn, $category_featured_stmt);
             while ($row = mysqli_fetch_array($feat_cat_id_result)) {
                 array_push($feat_CatIDs, $row['id']);

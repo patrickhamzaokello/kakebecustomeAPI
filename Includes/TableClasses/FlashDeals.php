@@ -77,10 +77,15 @@ class FlashDeals
         $start = date("Y-m-d H:i:s", $this->start_date);
         $end = date("Y-m-d H:i:s", $this->end_date);
 
+        $current_time_date = date('Y-m-d H:i:s', time());
+
 
         $datetime1 = new DateTime($start);//start time
         $datetime2 = new DateTime($end);//end time
-        $interval = $datetime1->diff($datetime2);
+        $servertime = new DateTime($current_time_date);
+
+
+        $interval =   $servertime->diff($datetime2);
 
         $doPlural = function($nb,$str){return $nb>1?$str.'s':$str;}; // adds plurals
 
@@ -191,7 +196,7 @@ class FlashDeals
         $categoryMenuItems = array();
 
 
-        $category_stmt = "SELECT product_id FROM flash_deal_products  WHERE flash_deal_id = ". $this->id. " ORDER BY product_id DESC LIMIT 8";
+        $category_stmt = "SELECT product_id FROM flash_deal_products  WHERE flash_deal_id = ". $this->id. " ORDER BY `flash_deal_products`.`created_at` DESC LIMIT 8";
         $menu_type_id_result = mysqli_query($this->conn, $category_stmt);
 
         while ($row = mysqli_fetch_array($menu_type_id_result)) {
