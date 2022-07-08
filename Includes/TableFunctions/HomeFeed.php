@@ -88,99 +88,54 @@ class HomeFeed
         $total_rows = floatval($data['count']);
         $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-
-        $categoryids = array();
         $menuCategory = array();
         $itemRecords = array();
 
+        //  popular search Begin
+        $bestsellingProductsID = array();
+        $bestSellingProducts = array();
+        $category_stmts = "SELECT `id`, `query`, `count`, `created_at`, `updated_at` FROM `searches` ORDER BY count DESC LIMIT 30";
+        $menu_type_id_results = mysqli_query($this->conn, $category_stmts);
 
-        if ($this->page == 1) {
+        while ($row = mysqli_fetch_array($menu_type_id_results)) {
 
-            //  popular search Begin
+            array_push($bestsellingProductsID, $row);
+        }
 
-            $bestsellingProductsID = array();
-            $bestSellingProducts = array();
-            $category_stmts = "SELECT `id`, `query`, `count`, `created_at`, `updated_at` FROM `searches` ORDER BY count DESC LIMIT 30";
-            $menu_type_id_results = mysqli_query($this->conn, $category_stmts);
-
-            while ($row = mysqli_fetch_array($menu_type_id_results)) {
-
-                array_push($bestsellingProductsID, $row);
-            }
-
-            foreach ($bestsellingProductsID as $row) {
-                $product = new Product($this->conn, intval($row['id']));
-                $temp = array();
-                $temp['id'] = $row['id'];
-                $temp['query'] = $row['query'];
-                $temp['count'] = $row['count'];
-                $temp['created_at'] = $row['created_at'];
-                $temp['updated_at'] = $row['updated_at'];
-
-
-                array_push($bestSellingProducts, $temp);
-            }
-
-
-            $slider_temps = array();
-            $slider_temps['popularSearch'] = $bestSellingProducts;
-            array_push($menuCategory, $slider_temps);
-
-            // end popular search  Fetch
-
-
-            //get search featured categories
-
-            $feat_CatIDs = array();
-            $featuredCategory = array();
-
-
-            $category_featured_stmt = "SELECT id FROM categories  WHERE featured = 1;";
-            $feat_cat_id_result = mysqli_query($this->conn, $category_featured_stmt);
-
-            while ($row = mysqli_fetch_array($feat_cat_id_result)) {
-
-                array_push($feat_CatIDs, $row);
-            }
-
-            foreach ($feat_CatIDs as $row) {
-                $category = new Category($this->conn, intval($row['id']));
-                $temp = array();
-                $temp['id'] = $category->getId();
-                $temp['parent_id'] = $category->getParent_id();
-                $temp['level'] = $category->getLevel();
-                $temp['name'] = $category->getName();
-                $temp['order_level'] = $category->getOrder_level();
-                $temp['commision_rate'] = $category->getCommission_rate();
-                $temp['banner'] = $category->getBanner();
-                $temp['icon'] = $category->getIcon();
-                $temp['featured'] = $category->getFeatured();
-                $temp['top'] = $category->getTop();
-                $temp['digital'] = $category->getDigital();
-                $temp['slug'] = $category->getSlug();
-                $temp['meta_title'] = $category->getMeta_title();
-                $temp['meta_description'] = $category->getMeta_description();
-                $temp['created_at'] = $category->getCreated_at();
-                $temp['updated_at'] = $category->getUpdated_at();
-                $temp['featuredCategoriesProduct'] = null;
-                array_push($featuredCategory, $temp);
-            }
-
-            $feat_Cat_temps = array();
-            $feat_Cat_temps['featuredCategories'] = $featuredCategory;
-            array_push($menuCategory, $feat_Cat_temps);
+        foreach ($bestsellingProductsID as $row) {
+            $temp = array();
+            $temp['id'] = $row['id'];
+            $temp['query'] = $row['query'];
+            $temp['count'] = $row['count'];
+            $temp['created_at'] = $row['created_at'];
+            $temp['updated_at'] = $row['updated_at'];
+            array_push($bestSellingProducts, $temp);
         }
 
 
-        //fetch home categories Begin
+        $slider_temps = array();
+        $slider_temps['popularSearch'] = $bestSellingProducts;
+        array_push($menuCategory, $slider_temps);
 
-        $home_categories = new BusinessSettings($this->conn, 90);
-        $remove_brackets = str_replace(array('[', ']'), '', $home_categories->getHomeSliders());
-        $remove_braces = str_replace(array('"', '"'), '', $remove_brackets);
-        $str_arr = explode(",", $remove_braces);
+        // end popular search  Fetch
 
-        foreach ($str_arr as $row) {
-            $category = new Category($this->conn, intval($row));
+
+        //get search featured categories
+
+        $feat_CatIDs = array();
+        $featuredCategory = array();
+
+
+        $category_featured_stmt = "SELECT id FROM categories  WHERE featured = 1;";
+        $feat_cat_id_result = mysqli_query($this->conn, $category_featured_stmt);
+
+        while ($row = mysqli_fetch_array($feat_cat_id_result)) {
+
+            array_push($feat_CatIDs, $row);
+        }
+
+        foreach ($feat_CatIDs as $row) {
+            $category = new Category($this->conn, intval($row['id']));
             $temp = array();
             $temp['id'] = $category->getId();
             $temp['parent_id'] = $category->getParent_id();
@@ -198,15 +153,14 @@ class HomeFeed
             $temp['meta_description'] = $category->getMeta_description();
             $temp['created_at'] = $category->getCreated_at();
             $temp['updated_at'] = $category->getUpdated_at();
-            $temp['products'] = $category->getCategoryProducts();
-            array_push($menuCategory, $temp);
+            $temp['featuredCategoriesProduct'] = null;
+            array_push($featuredCategory, $temp);
         }
 
+        $feat_Cat_temps = array();
+        $feat_Cat_temps['featuredCategories'] = $featuredCategory;
+        array_push($menuCategory, $feat_Cat_temps);
 
-        // $itemRecords["page"] = $this->pageno;
-        // $itemRecords["searchCategoriees"] = $menuCategory;
-        // $itemRecords["total_pages"] = $total_pages;
-        // $itemRecords["total_results"] = $total_rows;
 
         $itemRecords["page"] = 1;
         $itemRecords["searchCategoriees"] = $menuCategory;
