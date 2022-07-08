@@ -94,7 +94,7 @@ class ProductDetails
 
 
             $itemRecords["page"] = $this->pageno;
-            $itemRecords["selected_category"] = array();
+            $itemRecords["SelectedCategoryResult"] = array();
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
 
@@ -116,9 +116,9 @@ class ProductDetails
                 $cat_banner = $menu_type_data->getBanner();
                 $cat_created = $menu_type_data->getCreated_at();
                 $cat_name = $menu_type_data->getName();
+                $cat_level = $menu_type_data->getOrder_level();
                 $cat_metadescription = $menu_type_data->getMeta_description();
 
-                $sel_category = array();
 
 
                 if ($menu_type_data) {
@@ -126,21 +126,15 @@ class ProductDetails
                     $menu_type_temp['name'] = $cat_name;
                     $menu_type_temp['meta_description'] = $cat_metadescription;
                     $menu_type_temp['banner'] = $cat_banner;
-                    $menu_type_temp['banner'] = $cat_banner;
+                    $menu_type_temp['order_level'] = $cat_level;
                     $menu_type_temp['created'] = $cat_created;
-
-                    array_push($sel_category, $menu_type_temp);
+                    array_push($itemRecords["SelectedCategoryResult"], $menu_type_temp);
                 }
 
-                $category = array();
-                $category['category_info'] = $sel_category;
-
-
-                array_push($itemRecords["selected_category"], $category);
             }
 
 
-
+            $sel_category = array();
             foreach ($same_cat_IDs as $row) {
                 $product = new Product($this->conn, $row);
                 $temp = array();
@@ -158,8 +152,14 @@ class ProductDetails
                 $temp['min_qtn'] = $product->getMin_qty();
                 $temp['published'] = $product->getPublished();
 
-                array_push($itemRecords["selected_category"], $temp);
+                array_push($sel_category, $temp);
             }
+
+            $category = array();
+            $category['category_products'] = $sel_category;
+
+
+            array_push($itemRecords["SelectedCategoryResult"], $category);
         }
 
         return $itemRecords;
