@@ -1,12 +1,12 @@
 <?php
+
 class SearchFunctions
 {
 
     public $page;
     public $query;
     private $conn;
-    private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
-
+    private $imagePathRoot = "https://d2t03bblpoql2z.cloudfront.net/";
 
 
     public function __construct($con, $query, $page)
@@ -19,7 +19,7 @@ class SearchFunctions
 
     function searchMain()
     {
-
+        $search_algorithm = "normal";
         // create the base variables for building the search query
         $search_string = "SELECT * FROM products WHERE published = 1 AND ";
         $display_words = "";
@@ -33,7 +33,7 @@ class SearchFunctions
         $search_string = substr($search_string, 0, strlen($search_string) - 4);
         $display_words = substr($display_words, 0, strlen($display_words) - 1);
 
-
+//        echo $search_string;
         // run the query in the db and search through each of the records returned
         $query = mysqli_query($this->conn, $search_string);
         $result_count = mysqli_num_rows($query);
@@ -88,6 +88,7 @@ class SearchFunctions
 
             $itemRecords["page"] = $this->pageno;
             $itemRecords["searchTerm"] = $display_words;
+            $itemRecords["algorithm"] = $search_algorithm;
             $itemRecords["products"] = $menuCategory;
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
@@ -96,6 +97,7 @@ class SearchFunctions
         } else {
             $itemRecords["page"] = $this->pageno;
             $itemRecords["searchTerm"] = $display_words;
+            $itemRecords["algorithm"] = $search_algorithm;
             $itemRecords["products"] = null;
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
@@ -107,7 +109,7 @@ class SearchFunctions
 
     function searchFullText()
     {
-
+        $search_algorithm = "fulltext";
         // SELECT * FROM products WHERE MATCH (name) AGAINST ('cooking oil')
 
         // create the base variables for building the search query
@@ -115,9 +117,10 @@ class SearchFunctions
         $display_words = "";
 
         // format each of search keywords into the db query to be run
-        $search_string .= "MATCH (name) AGAINST ('".$this->query."')";
+        $search_string .= "MATCH (name,tags) AGAINST ('" . $this->query . "' IN NATURAL LANGUAGE MODE)";
         $display_words .= $this->query . ' ';
 
+//        echo $search_string;
         // run the query in the db and search through each of the records returned
         $query = mysqli_query($this->conn, $search_string);
         $result_count = mysqli_num_rows($query);
@@ -173,6 +176,7 @@ class SearchFunctions
 
             $itemRecords["page"] = $this->pageno;
             $itemRecords["searchTerm"] = $display_words;
+            $itemRecords["algorithm"] = $search_algorithm;
             $itemRecords["products"] = $menuCategory;
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
@@ -180,6 +184,7 @@ class SearchFunctions
         } else {
             $itemRecords["page"] = $this->pageno;
             $itemRecords["searchTerm"] = $display_words;
+            $itemRecords["algorithm"] = $search_algorithm;
             $itemRecords["products"] = null;
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
