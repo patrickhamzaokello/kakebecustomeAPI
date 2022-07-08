@@ -28,7 +28,7 @@ class ProductDetails
 
         if ($this->categoryID) {
             $this->pageno = floatval($page);
-            $no_of_records_per_page = 10;
+            $no_of_records_per_page = 15;
             $offset = ($this->pageno - 1) * $no_of_records_per_page;
 
             //get category ids with the same parent id
@@ -41,6 +41,10 @@ class ProductDetails
             if($test_row['id'] == 0){
                 array_push($sibling_cat, $this->categoryID);
             } else {
+                // level 0 [parent] category id to the array
+                array_push($sibling_cat, $this->categoryID);
+
+
                 // level 1 shop_category [product] selection
                 $sibling_cat_sql = "SELECT id FROM `categories` WHERE parent_id = " . $this->categoryID . " ";
                 $sibling_cat_sql_result = mysqli_query($this->conn, $sibling_cat_sql);
@@ -81,6 +85,7 @@ class ProductDetails
             // add the last bracket
             $prod_string .=")";
 
+//            final sql string
 //            echo $prod_string;
 
 
