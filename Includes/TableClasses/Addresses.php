@@ -3,8 +3,9 @@
 class Addresses
 {
 
-    private $table = "addresses";
+    private $Table = "addresses";
     private $id, $user_id, $address, $country, $city, $longitude, $latitude, $postal_code, $phone, $set_default, $created_at, $updated_at;
+    private $shipping_cost;
     private $conn;
 
 
@@ -33,8 +34,6 @@ class Addresses
             $this->updated_at = $this->updated_at;
         }
     }
-
-
 
 
     /**
@@ -131,6 +130,39 @@ class Addresses
     public function getUpdated_at()
     {
         return $this->updated_at;
+    }
+
+    public function getUser_Name()
+    {
+        $user = new User($this->conn, $this->user_id);
+        return $user->getName();
+    }
+
+    public function getUser_email()
+    {
+        $user = new User($this->conn, $this->user_id);
+        return $user->getEmail();
+    }
+
+    public function getShippingCost()
+    {
+
+        $sql = "SELECT `cost` FROM cities WHERE `cities`.`name` = '". $this->city ."' LIMIT 1 ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $stmt->bind_result($this->shipping_cost);
+        $stmt->fetch();
+
+        if($this->shipping_cost != null){
+           $this->shipping_cost = $this->shipping_cost;
+
+        } else {
+            $this->shipping_cost = 2900;
+        }
+
+        return $this->shipping_cost;
+
+
     }
 }
 

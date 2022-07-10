@@ -89,50 +89,42 @@ class AddressHandler
             $total_rows = floatval($data['count']);
             $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-            if($total_rows > 0){
-                $name_sql = "SELECT name, email FROM users WHERE id = " . $userID . " limit 1";
-                $name_result = mysqli_query($this->conn, $name_sql);
-                $name_data = mysqli_fetch_assoc($name_result);
-                $name = $name_data['name'];
-                $email = $name_data['email'];
-            } else {
-                $name = null;
-                $email = null;
-            }
-
-
-
-
             $itemRecords["page"] = $this->pageno;
             $itemRecords["user_address"] = array();
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
 
-            $stmt = $this->conn->prepare("SELECT `id`, `user_id`, `address`, `country`, `city`, `longitude`, `latitude`, `postal_code`, `phone`, `set_default`, `created_at`, `updated_at` FROM addresses WHERE user_id = " . $userID . " ORDER BY created_at DESC LIMIT " . $offset . "," . $no_of_records_per_page . " ");
-            $stmt->execute();
-            $stmt->bind_result($this->id, $this->user_id, $this->address, $this->country, $this->city, $this->longitude, $this->latitude, $this->postal_code, $this->phone, $this->set_default, $this->created_at, $this->updated_at);
+            if($total_rows > 0){
+                $address_ids = array();
+                $stmt = $this->conn->prepare("SELECT `id` FROM addresses WHERE user_id = " . $userID . " ORDER BY created_at DESC LIMIT " . $offset . "," . $no_of_records_per_page . " ");
+                $stmt->execute();
+                $stmt->bind_result($this->id);
 
+                while ($stmt->fetch()) {
+                    array_push($address_ids, $this->id);
+                }
+                foreach ($address_ids as $address_id) {
+                    $temp = array();
+                    $address = new Addresses($this->conn, $address_id);
+                    $temp['id'] = $address->getId();
+                    $temp['user_id'] = $address->getUser_id();
+                    $temp['username'] = $address->getUser_Name();
+                    $temp['email'] = $address->getUser_email();
+                    $temp['address'] = $address->getAddress();
+                    $temp['country'] = $address->getCountry();
+                    $temp['city'] = $address->getCity();
+                    $temp['phone'] = $address->getPhone();
+                    $temp['set_default'] = $address->getSet_default();
+                    $temp['created_at'] = $address->getCreated_at();
+                    $temp['updated_at'] = $address->getUpdated_at();
+                    $temp['longitude'] = $address->getLongitude();
+                    $temp['latitude'] = $address->getLatitude();
+                    $temp['postal_code'] = $address->getPostal_code();
+                    $temp['shipping_cost'] = $address->getShippingCost();
 
-            while ($stmt->fetch()) {
+                    array_push($itemRecords["user_address"], $temp);
+                }
 
-                $temp = array();
-
-                $temp['id'] = $this->id;
-                $temp['user_id'] = $this->user_id;
-                $temp['username'] = $name != null ? $name :"kakebe_user";
-                $temp['email'] = $email != null ? $email :"user@shopkakebe.com";
-                $temp['address'] = $this->address;
-                $temp['country'] = $this->country;
-                $temp['city'] = $this->city;
-                $temp['phone'] = $this->phone;
-                $temp['set_default'] = $this->set_default;
-                $temp['created_at'] = $this->created_at;
-                $temp['updated_at'] = $this->updated_at;
-                $temp['longitude'] = $this->longitude;
-                $temp['latitude'] = $this->latitude;
-                $temp['postal_code'] = $this->postal_code;
-
-                array_push($itemRecords["user_address"], $temp);
             }
 
 

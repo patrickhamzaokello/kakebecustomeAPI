@@ -10,19 +10,17 @@ header("Content-Type: application/json; charset=UTF-8");
 
 
 include_once '../../Includes/config/Database.php';
-include_once  '../../Includes/TableClasses/User.php';
 include_once  '../../Includes/TableClasses/Cities.php';
-include_once  '../../Includes/TableClasses/Addresses.php';
-include_once '../../Includes/TableFunctions/AddressHandler.php';
+include_once '../../Includes/TableFunctions/CityHandler.php';
 
 
 $database = new Database();
 $db = $database->getConnection();
 
 
-$address = new AddressHandler($db);
+$address = new CityHandler($db);
 
-$result = $address->readUserAddress();
+$result = $address->readcities();
 
 
 
