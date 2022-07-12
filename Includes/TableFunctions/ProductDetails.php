@@ -41,9 +41,6 @@ class ProductDetails
             if($test_row['id'] == 0){
                 array_push($sibling_cat, $this->categoryID);
             } else {
-                // level 0 [parent] category id to the array
-                array_push($sibling_cat, $this->categoryID);
-
 
                 // level 1 shop_category [product] selection
                 $sibling_cat_sql = "SELECT id FROM `categories` WHERE parent_id = " . $this->categoryID . " ";
@@ -73,7 +70,9 @@ class ProductDetails
 
             }
 
-            // SELECT `id` From products WHERE published = 1 AND (category_id = 100 OR category_id = 101 OR category_id = 102)
+            // include level 0 [parent] category id to the array
+            array_push($sibling_cat, $this->categoryID);
+
 
             $prod_string = "SELECT `id` From products WHERE published = 1 AND (";
             foreach ($sibling_cat as $cat_id) {
@@ -112,7 +111,7 @@ class ProductDetails
                 array_push($same_cat_IDs, $row['id']);
             }
 
-            // echo $same_cat_stm;
+             echo $same_cat_stm;
 
             if ($this->pageno == 1) {
 

@@ -27,7 +27,8 @@ if(!empty($data->user_id) && !empty($data->district) &&
     $address->district = $data->district;
     $address->location = $data->location;
     $address->phone = $data->phone;
-
+    $address->latitude = $data->latitude;
+    $address->longitude = $data->longitude;
 
     if($address->create()){
         http_response_code(201);  

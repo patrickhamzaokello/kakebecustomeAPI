@@ -16,8 +16,8 @@ class AddressHandler
     private $set_default;
     private $created_at;
     private $updated_at;
-    private $longitude;
-    private $latitude;
+    public $longitude;
+    public $latitude;
     private $postal_code;
 
 
@@ -40,14 +40,16 @@ class AddressHandler
             return false;
         } else {
 
-            $stmt = $this->conn->prepare("INSERT INTO " . $this->address_table . "( `user_id`, `address`, `city`, `phone`) VALUES(?,?,?,?)");
+            $stmt = $this->conn->prepare("INSERT INTO " . $this->address_table . "( `user_id`, `address`, `city`, `phone`,`latitude`,`longitude`) VALUES(?,?,?,?,?,?)");
 
             $this->user_id = htmlspecialchars(strip_tags($this->user_id));
             $this->district = htmlspecialchars(strip_tags($this->district));
             $this->location = htmlspecialchars(strip_tags($this->location));
             $this->phone = htmlspecialchars(strip_tags($this->phone));
+            $this->latitude = htmlspecialchars(strip_tags($this->latitude));
+            $this->longitude = htmlspecialchars(strip_tags($this->longitude));
 
-            $stmt->bind_param("isss", $this->user_id, $this->location, $this->district, $this->phone);
+            $stmt->bind_param("isssdd", $this->user_id, $this->location, $this->district, $this->phone,$this->latitude, $this->longitude);
 
             if ($stmt->execute()) {
                 $this->exe_status = "success";
