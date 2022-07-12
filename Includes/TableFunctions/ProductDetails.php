@@ -111,7 +111,7 @@ class ProductDetails
                 array_push($same_cat_IDs, $row['id']);
             }
 
-             echo $same_cat_stm;
+//             echo $same_cat_stm;
 
             if ($this->pageno == 1) {
 
