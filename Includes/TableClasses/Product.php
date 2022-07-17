@@ -220,6 +220,13 @@ class Product
         return $this->discount;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUnit()
+    {
+        return $this->unit;
+    }
 
 
 

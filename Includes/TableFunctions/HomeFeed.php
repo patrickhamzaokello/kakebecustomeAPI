@@ -4,7 +4,7 @@ class HomeFeed
 {
 
     public $page;
-    public $version = 13;
+    public $version = 14;
     private $conn;
     private $imagePathRoot = "https://d2t03bblpoql2z.cloudfront.net/";
 

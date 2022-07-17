@@ -214,6 +214,7 @@ class ProductDetails
                     $temp['meta_description'] = $product->getMeta_description();
                     $temp['meta_img'] = $product->getMeta_img();
                     $temp['min_qtn'] = $product->getMin_qty();
+                    $temp['unit']  = $product->getUnit();
                     $temp['published'] = $product->getPublished();
                     $temp['attributes'] = $product->getAttributes();
                     $temp['choice_options'] = $product->getChoiceOptions();
