@@ -57,17 +57,6 @@ if (isset($_GET['apicall'])) {
 
                         $stmt->fetch();
 
-                        //insert into customertable
-                        $customer_stmt = $conn->prepare("INSERT INTO customers (user_id) VALUES (?)");
-                        $customer_stmt->bind_param("i", $customer_id);
-                        $customer_stmt->execute();
-                        $customer_stmt->close();
-
-//                        INSERT INTO Table_1 (column_1, column_2, column_3)
-//                        SELECT column_1, column_2, column_3
-//                        FROM Table_2
-
-
 
                         $user = array(
                             'id' => $customer_id,
@@ -76,8 +65,18 @@ if (isset($_GET['apicall'])) {
                             'phone' => $customer_phone_number,
                         );
 
-
                         $stmt->close();
+
+                        //insert into customertable
+                        $customer_stmt = $conn->prepare(" INSERT INTO customers (user_id) VALUES (?)");
+                        $customer_stmt->bind_param("i", $customer_id);
+                        $customer_stmt->execute();
+                        $customer_stmt->close();
+
+//                        INSERT INTO Table_1 (column_1, column_2, column_3)
+//                        SELECT column_1, column_2, column_3
+//                        FROM Table_2
+
 
                         //adding the user data in response
                         $response['error'] = false;
@@ -101,13 +100,13 @@ if (isset($_GET['apicall'])) {
                 $password = $_POST['password'];
 
 
-                $sql = "select * from users where email = '".$username."' OR phone = '".$username."' ";
-                $rs = mysqli_query($conn,$sql);
+                $sql = "select * from users where email = '" . $username . "' OR phone = '" . $username . "' ";
+                $rs = mysqli_query($conn, $sql);
                 $numRows = mysqli_num_rows($rs);
 
-                if($numRows  == 1){
+                if ($numRows == 1) {
                     $row = mysqli_fetch_assoc($rs);
-                    if(password_verify($password,$row['password'])){
+                    if (password_verify($password, $row['password'])) {
                         $check_email = Is_email($username);
 
                         if ($check_email) {
@@ -146,13 +145,11 @@ if (isset($_GET['apicall'])) {
                             $response['error'] = true;
                             $response['message'] = 'Your Credentials are invalid!';
                         }
-                    }
-                    else{
+                    } else {
                         $response['error'] = true;
                         $response['message'] = 'Wrong Password';
                     }
-                }
-                else{
+                } else {
                     $response['error'] = true;
                     $response['message'] = 'No User Found';
                 }
