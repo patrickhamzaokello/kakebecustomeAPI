@@ -15,6 +15,7 @@
     <style type="text/css">
 
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -22,7 +23,7 @@
         }
 
         body {
-            background-color: #32312f;
+            background-color: #f2f2f2;
             font-family: 'Montserrat', sans-serif;
         }
 
@@ -34,7 +35,7 @@
         .heading {
             font-size: 40px;
             text-align: center;
-            color: #f1f1f1;
+            color: #000000;
             margin-bottom: 40px;
         }
 
@@ -44,7 +45,7 @@
         }
 
         .table thead {
-            background-color: #ff1046;
+            background-color: #939393;
         }
 
         .table thead tr th {
@@ -55,7 +56,7 @@
             opacity: 1;
             padding: 12px;
             vertical-align: top;
-            border: 1px solid #dee2e685;
+            border: 1px solid #ffffff;
         }
 
         .table tbody tr td {
@@ -76,7 +77,7 @@
             color: #ff1800;
         }
 
-        .table .text_green{
+        .table .text_green {
             font-size: 14px;
             font-weight: bold;
             letter-spacing: 0.35px;
@@ -166,22 +167,23 @@ $result = $order->readTodaysOrders();
 <main>
 
     <div class="table-container">
-        <h1 class="heading">Today's Orders</h1>
         <table class="table">
-            <thead>
-            <tr>
-                <th>Order no</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Contact</th>
-                <th>Total Amount</th>
-                <th>Date</th>
-                <th>Status</th>
-            </tr>
-            </thead>
+            <?php if ($result) : ?>
+                <h1 class="heading">Today's Orders</h1>
+
+                <thead>
+                <tr>
+                    <th>Order no</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Contact</th>
+                    <th>Total Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
 
                 <tbody>
-                <?php if ($result) : ?>
 
 
                 <?php
@@ -214,12 +216,15 @@ $result = $order->readTodaysOrders();
 
                 <?php endforeach ?>
 
-                <?php else : ?>
-                No Orders Left
-            <?php endif ?>
 
                 </tbody>
-           
+            <?php else : ?>
+                <div style="display:grid; place-content: center; text-align: center; color: #3d3a3a; align-content: center; justify-items: center; height: 300px">
+                    <h1> No New Orders </h1>
+                    <p>Encourage More People to buy from Kakebe Shop</p>
+
+                </div>
+            <?php endif ?>
         </table>
     </div>
 
