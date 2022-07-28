@@ -24,6 +24,14 @@ const url = "https://xyzobide.kakebeshop.com/KakebeAPI/Requests/Address/allAddre
 var data = [];
 var layerGroup = L.layerGroup().addTo(mymap);
 
+// var greenIcon = L.icon({
+//     iconUrl: 'pinlocation.png',
+//     shadowUrl: 'pinlocationshadow.svg',
+
+//     iconSize:     [40, 40], // size of the icon
+//     shadowSize:   [13, 2], // size of the shadow
+// });
+
 async function getInfrastructure() {
     const response = await fetch(url);
     data = await response.json();
@@ -57,11 +65,11 @@ async function getInfrastructure() {
             
             <div class="infras_card" style="border-radius: 20px;background-color:#ffffff ; padding: 1em; color: #282828; font-size: 15px;">
             <h1 style="color: #171717; font-size: 22px;">${username}</h1>
-            <p style="margin: 0;color: #4b4b4b;">${address}${city}</p>
+            <p style="margin: 0;color: #4b4b4b;">${address} , ${city}</p>
             <p style="margin: 0;color:#4f4f4f ;margin-top: 1em;"><span style="color: #CDEDCB;"></span>${email}</p>
-            <p style="margin: 0;"><span style="color: #444444;">Contact</span>${phone}</p>
-            <p style="margin: 0;"><span style="color: #4b4b4b;">Date</span>${created_at}</p>
-            <p style=" margin: 0; color: #570c37; margin-top: 1em; font-size: 12px;">This location may change based on the Order</p>
+            <p style="margin: 0;"><span style="color: #444444;">Contact: </span>${phone}</p>
+            <p style="margin: 0;"><span style="color: #4b4b4b;">Date: </span>${created_at}</p>
+            <p style=" margin: 0; color: #0ad736; margin-top: 1em; font-size: 12px;">This location may change based on the Address</p>
           </div>
             `;
         marker.bindPopup(template);
@@ -113,11 +121,11 @@ function filterCards() {
             let template = `
             <div class="infras_card" style="border-radius: 20px;background-color:#ffffff ; padding: 1em; color: #282828; font-size: 15px;">
             <h1 style="color: #171717; font-size: 22px;">${username}</h1>
-            <p style="margin: 0;color: #4b4b4b;">${address}${city}</p>
+            <p style="margin: 0;color: #4b4b4b;">${address} , ${city}</p>
             <p style="margin: 0;color:#4f4f4f ;margin-top: 1em;"><span style="color: #CDEDCB;"></span>${email}</p>
-            <p style="margin: 0;"><span style="color: #444444;">Contact</span>${phone}</p>
-            <p style="margin: 0;"><span style="color: #4b4b4b;">Date</span>${created_at}</p>
-            <p style=" margin: 0; color: #570c37; margin-top: 1em; font-size: 12px;">This location may change based on the Order</p>
+            <p style="margin: 0;"><span style="color: #444444;">Contact: </span>${phone}</p>
+            <p style="margin: 0;"><span style="color: #4b4b4b;">Date: </span>${created_at}</p>
+            <p style=" margin: 0; color: #0ad736; margin-top: 1em; font-size: 12px;">This location may change based on the Address</p>
           </div>
             `;
             marker.bindPopup(template);
@@ -130,11 +138,11 @@ function filterCards() {
 
             <div class="infras_card" style="border-radius: 20px;background-color:#ffffff ; padding: 1em; color: #282828; font-size: 15px;">
             <h1 style="color: #171717; font-size: 22px;">${username}</h1>
-            <p style="margin: 0;color: #4b4b4b;">${address}${city}</p>
+            <p style="margin: 0;color: #4b4b4b;">${address} , ${city}</p>
             <p style="margin: 0;color:#4f4f4f ;margin-top: 1em;"><span style="color: #CDEDCB;"></span>${email}</p>
-            <p style="margin: 0;"><span style="color: #444444;">Contact</span>${phone}</p>
-            <p style="margin: 0;"><span style="color: #4b4b4b;">Date</span>${created_at}</p>
-            <p style=" margin: 0; color: #570c37; margin-top: 1em; font-size: 12px;">This location may change based on the Order</p>
+            <p style="margin: 0;"><span style="color: #444444;">Contact: </span>${phone}</p>
+            <p style="margin: 0;"><span style="color: #4b4b4b;">Date: </span>${created_at}</p>
+            <p style=" margin: 0; color: #0ad736; margin-top: 1em; font-size: 12px;">This location may change based on the Address</p>
           </div>
             `;
             marker.bindPopup(template);

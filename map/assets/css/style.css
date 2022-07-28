@@ -373,10 +373,9 @@ body.dark .switch::before {
 
 .home {
   position: absolute;
-  top: 90px;
-  left: 250px;
+  top: 80px;
   height: calc(100vh - 90px);
-  width: calc(100% - 250px);
+  width: 100%;
   background-color: var(--body-color);
   -webkit-transition: var(--tran-05);
   transition: var(--tran-05);
@@ -404,7 +403,7 @@ body.dark .home .text {
   position: absolute;
   top: 0;
   width: 100%;
-  background-color: #035419;
+  background-color: #960126;
 }
 
 .main-nav * {
@@ -444,7 +443,7 @@ body.dark .home .text {
 }
 
 .main-nav .camp_logo a {
-  color: #d6f299;
+  color: #ffc107;
   font-size: 20px;
   font-weight: 700;
   font-family: "Montserrat";
@@ -729,7 +728,7 @@ input[type="checkbox"]:disabled {
 }
 
 .main-nav .logo {
-  background: url("../../img/logo.svg") no-repeat center/cover;
+  background: url("../logo.svg") no-repeat center/cover;
   display: block;
   width: 35px;
   height: 35px;
@@ -749,21 +748,21 @@ input[type="checkbox"]:disabled {
   right: 15px;
   top: 9px;
   content: "\2192";
-  color: #2dbe60;
+  color: #ffc107;
 }
 
 .main-nav .registration:hover, .main-nav .registration:focus {
-  border-color: #2dbe60;
+  border-color: #f29999;
   text-decoration: none;
 }
 
 .main-nav.open {
-  background-color: #035419;
+  background-color: #f29999;
 }
 
 .main-nav.open .tuggle-content {
-  -webkit-box-shadow: 0px 5px 12px -8px #035419;
-          box-shadow: 0px 5px 12px -8px #035419;
+  -webkit-box-shadow: 0px 5px 12px -8px #f29999;
+          box-shadow: 0px 5px 12px -8px #f29999;
   z-index: 10000;
 }
 
@@ -782,8 +781,8 @@ input[type="checkbox"]:disabled {
 }
 
 .main-nav.active .registration {
-  border-color: #2dbe60;
-  background-color: #2dbe60;
+  border-color: #f29999;
+  background-color: #f29999;
   color: #fff;
 }
 
@@ -792,8 +791,8 @@ input[type="checkbox"]:disabled {
 }
 
 .main-nav.active .registration:hover {
-  border-color: #28a956;
-  background-color: #28a956;
+  border-color: #f29999;
+  background-color: #f29999;
 }
 
 @media (max-width: 860px) {
@@ -809,7 +808,7 @@ input[type="checkbox"]:disabled {
     border-bottom: none;
   }
   .main-nav.open .tuggle-content {
-    background-color: #035419;
+    background-color: #f29999;
   }
   .main-nav.active .tuggle-content {
     background-color: #fff;
