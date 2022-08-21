@@ -136,6 +136,23 @@ class SearchFunctions
 
         $itemRecords = array();
 
+        $sch_term = htmlspecialchars(strip_tags($this->query));
+        $sh_result = mysqli_query($this->conn, "SELECT * FROM `searches` WHERE `query`='" . $sch_term . "' LIMIT 1;");
+        $sh_data = mysqli_fetch_assoc($sh_result);
+        if ($sh_data != null) {
+            $sh_id = floatval($sh_data['id']);
+            $countQuery = mysqli_query($this->conn,"SELECT `count` FROM searches WHERE id = $sh_id");
+            $shq_data = mysqli_fetch_assoc($countQuery);
+            $shq_count = floatval($shq_data['count']);
+            $shq_count += 1;
+            mysqli_query($this->conn, "UPDATE `searches` SET `count`= $shq_count WHERE id = $sh_id");
+
+        } else {
+          //insert data
+            mysqli_query($this->conn, "INSERT INTO `searches`(`query`, `count`) VALUES ('" . $sch_term . "',1)");
+        }
+
+
 
         // check if the search query returned any results
         if ($result_count > 0) {
