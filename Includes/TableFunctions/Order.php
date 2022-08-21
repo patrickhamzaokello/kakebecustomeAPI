@@ -25,6 +25,9 @@ class Order
     private $userOrderid;
     private $userOrderPage;
 
+    //shiping cost;
+    private $shipping_cost;
+
     private $conn;
 
 
@@ -62,15 +65,28 @@ class Order
             $this->exe_status = "failure";
         }
 
-        $stmt_OrderDetail = $this->conn->prepare("INSERT INTO " . $this->order_detail_table . "(`order_id`, `product_id`, `price`, `quantity`) VALUES(?,?,?,?)");
-        $stmt_OrderDetail->bind_param("iiii", $this->order_id, $this->menu_id, $this->amount, $this->no_of_serving);
+        // shipping cost getting
+        $sh_key = 'city';
+        $sh_city = json_decode($this->order_address)->$sh_key;
+        $sh_result = mysqli_query($this->conn, "SELECT cost FROM `cities` WHERE name = '" . $sh_city . "' LIMIT 1;");
+        $sh_data = mysqli_fetch_assoc($sh_result);
+        if ($sh_data != null) {
+            $this->shipping_cost = floatval($sh_data['cost']);
+        } else {
+            $this->shipping_cost = floatval(0);
+        }
 
+        $stmt_OrderDetail = $this->conn->prepare("INSERT INTO " . $this->order_detail_table . "(`order_id`, `product_id`, `price`, `quantity`, `shipping_cost`) VALUES(?,?,?,?,?)");
+        $stmt_OrderDetail->bind_param("iiiii", $this->order_id, $this->menu_id, $this->amount, $this->no_of_serving, $this->shipping_cost);
+
+        $each_product_cost = $this->shipping_cost / sizeof($this->orderItemList);
 
         foreach ($this->orderItemList as $i => $i_value) {
             $this->menu_id = htmlspecialchars(strip_tags($i_value->menuId));
             $this->amount = htmlspecialchars(strip_tags($i_value->price));
             $this->no_of_serving = htmlspecialchars(strip_tags($i_value->quantity));
             $this->menu_total_amount = htmlspecialchars(strip_tags(($i_value->price) * ($i_value->quantity)));
+            $this->shipping_cost = $each_product_cost;
 
             if ($stmt_OrderDetail->execute()) {
                 $this->exe_status = "success";

@@ -162,7 +162,7 @@ class AddressHandler
 
         if ($total_rows > 0) {
             $address_ids = array();
-            $stmt = $this->conn->prepare("SELECT `id` FROM addresses ORDER BY created_at DESC LIMIT " . $offset . "," . $no_of_records_per_page . " ");
+            $stmt = $this->conn->prepare("SELECT `id` FROM addresses WHERE (`longitude` IS NOT NULL AND `latitude` IS NOT NULL) AND (`longitude` != 0 AND `latitude` != 0) ORDER BY created_at DESC LIMIT " . $offset . "," . $no_of_records_per_page . " ");
             $stmt->execute();
             $stmt->bind_result($this->id);
 
@@ -172,6 +172,12 @@ class AddressHandler
             foreach ($address_ids as $address_id) {
                 $temp = array();
                 $address = new Addresses($this->conn, $address_id);
+                $cphpdate = strtotime($address->getCreated_at());
+                $uphpdate = strtotime($address->getUpdated_at());
+
+                $cdate = date('d M Y h:i A', $cphpdate);
+                $udate = date('d M Y h:i A', $uphpdate);
+
                 $temp['id'] = $address->getId();
                 $temp['user_id'] = $address->getUser_id();
                 $temp['username'] = $address->getUser_Name();
@@ -181,13 +187,12 @@ class AddressHandler
                 $temp['city'] = $address->getCity();
                 $temp['phone'] = $address->getPhone();
                 $temp['set_default'] = $address->getSet_default();
-                $temp['created_at'] = $address->getCreated_at();
-                $temp['updated_at'] = $address->getUpdated_at();
+                $temp['created_at'] = $cdate;
+                $temp['updated_at'] = $udate;
                 $temp['longitude'] = $address->getLongitude();
                 $temp['latitude'] = $address->getLatitude();
                 $temp['postal_code'] = $address->getPostal_code();
                 $temp['shipping_cost'] = $address->getShippingCost();
-
                 array_push($itemRecords["user_address"], $temp);
             }
 
