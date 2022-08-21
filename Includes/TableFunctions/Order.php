@@ -79,14 +79,16 @@ class Order
         $stmt_OrderDetail = $this->conn->prepare("INSERT INTO " . $this->order_detail_table . "(`order_id`, `product_id`, `price`, `quantity`, `shipping_cost`) VALUES(?,?,?,?,?)");
         $stmt_OrderDetail->bind_param("iiiii", $this->order_id, $this->menu_id, $this->amount, $this->no_of_serving, $this->shipping_cost);
 
-        $each_product_cost = $this->shipping_cost / sizeof($this->orderItemList);
-
         foreach ($this->orderItemList as $i => $i_value) {
             $this->menu_id = htmlspecialchars(strip_tags($i_value->menuId));
             $this->amount = htmlspecialchars(strip_tags($i_value->price));
             $this->no_of_serving = htmlspecialchars(strip_tags($i_value->quantity));
             $this->menu_total_amount = htmlspecialchars(strip_tags(($i_value->price) * ($i_value->quantity)));
-            $this->shipping_cost = $each_product_cost;
+            if($i === array_key_first($this->orderItemList)){
+                $this->shipping_cost = $this->shipping_cost;
+            } else {
+                $this->shipping_cost = 0;
+            }
 
             if ($stmt_OrderDetail->execute()) {
                 $this->exe_status = "success";
