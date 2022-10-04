@@ -6,7 +6,8 @@ class HomeFeed
     public $page;
     public $version = 14;
     private $conn;
-    private $imagePathRoot = "https://d2t03bblpoql2z.cloudfront.net/";
+//    private $imagePathRoot = "https://d2t03bblpoql2z.cloudfront.net/";
+    private $imagePathRoot = "https://kakebeshop.com/";
 
 
     public function __construct($con, $page)
@@ -212,7 +213,8 @@ class HomeFeed
 
 
             $slider_temps = array();
-            $slider_temps['header_ad'] = "https://d2t03bblpoql2z.cloudfront.net/uploads/all/a8LWbZP0CdfEu5fw7uUPuSAaq6oYlC4jI7EtA6tq.gif";
+//            $slider_temps['header_ad'] = "https://d2t03bblpoql2z.cloudfront.net/uploads/all/a8LWbZP0CdfEu5fw7uUPuSAaq6oYlC4jI7EtA6tq.gif";
+            $slider_temps['header_ad'] = "https://kakebeshop.com/uploads/all/a8LWbZP0CdfEu5fw7uUPuSAaq6oYlC4jI7EtA6tq.gif";
             $slider_temps['sliderBanners'] = $slidermeta_img_path;
             array_push($menuCategory, $slider_temps);
 

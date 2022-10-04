@@ -6,7 +6,8 @@ class Category
     public $id, $parent_id, $level, $name, $order_level, $commision_rate, $banner, $icon, $featured, $top, $digital, $slug, $meta_title, $meta_description, $created_at, $updated_at;
     private $conn;
 
-    private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
+//    private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
+    private $imagePathRoot  = "https://kakebeshop.com/";
 
 
     public function __construct($con, $id)

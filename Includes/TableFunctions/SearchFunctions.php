@@ -6,7 +6,8 @@ class SearchFunctions
     public $page;
     public $query;
     private $conn;
-    private $imagePathRoot = "https://d2t03bblpoql2z.cloudfront.net/";
+//    private $imagePathRoot = "https://d2t03bblpoql2z.cloudfront.net/";
+    private $imagePathRoot = "https://kakebeshop.com/";
 
 
     public function __construct($con, $query, $page)

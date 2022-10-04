@@ -6,7 +6,8 @@ class FlashDeals
     private $Table = "flash_deals";
     private  $id, $title, $start_date, $end_date, $status, $featured, $background_color, $text_color, $banner, $slug, $created_at, $updated_at;
     private $conn;
-    private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
+//    private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
+    private $imagePathRoot  = "https://kakebeshop.com/";
 
     public function __construct($id, $conn)
     {
