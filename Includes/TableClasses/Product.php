@@ -9,7 +9,7 @@ class Product
     public $discount, $discount_type, $discount_start_date, $discount_end_date, $tax, $tax_type, $shipping_type, $shipping_cost, $is_quantity_multiplied, $est_shipping_days, $num_of_sale, $meta_title, $meta_description, $meta_img, $pdf, $slug, $rating, $barcode, $digital, $auction_product, $file_name, $file_path, $created_at, $updated_at;
     private $conn;
 //    private $imagePathRoot  = "https://d2t03bblpoql2z.cloudfront.net/";
-    private $imagePathRoot  = "https://kakebeshop.com/";
+    private $imagePathRoot  = "https://kakebeshop.com/public/";
 
 
     public function __construct($con, $id)
