@@ -4,7 +4,7 @@ class HomeFeed
 {
 
     public $page;
-    public $version = 14;
+    public $version = 15;
     private $conn;
 //    private $imagePathRoot = "https://d2t03bblpoql2z.cloudfront.net/";
     private $imagePathRoot = "https://kakebeshop.com/public/";
