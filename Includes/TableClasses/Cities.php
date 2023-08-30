@@ -13,7 +13,7 @@ class Cities
         $this->conn = $con;
         $this->id = $id;
 
-        $stmt = $this->conn->prepare("SELECT  `id`, `country_id`, `name`, `cost`, `created_at`, `updated_at` FROM " . $this->Table . " WHERE id = ? ");
+        $stmt = $this->conn->prepare("SELECT  `id`, `state_id`, `name`, `cost`, `created_at`, `updated_at` FROM " . $this->Table . " WHERE id = ? ");
         $stmt->bind_param("i", $this->id);
         $stmt->execute();
         $stmt->bind_result($this->id, $this->country_id, $this->name, $this->cost, $this->created_at, $this->updated_at);

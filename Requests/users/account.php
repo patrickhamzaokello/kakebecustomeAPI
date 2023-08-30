@@ -68,14 +68,11 @@ if (isset($_GET['apicall'])) {
                         $stmt->close();
 
                         //insert into customertable
-                        $customer_stmt = $conn->prepare(" INSERT INTO customers (user_id) VALUES (?)");
-                        $customer_stmt->bind_param("i", $customer_id);
-                        $customer_stmt->execute();
-                        $customer_stmt->close();
+//                        $customer_stmt = $conn->prepare(" INSERT INTO customers (user_id) VALUES (?)");
+//                        $customer_stmt->bind_param("i", $customer_id);
+//                        $customer_stmt->execute();
+//                        $customer_stmt->close();
 
-//                        INSERT INTO Table_1 (column_1, column_2, column_3)
-//                        SELECT column_1, column_2, column_3
-//                        FROM Table_2
 
 
                         //adding the user data in response

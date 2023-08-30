@@ -14,7 +14,7 @@ class Addresses
         $this->conn = $con;
         $this->id = $id;
 
-        $stmt = $this->conn->prepare("SELECT `id`, `user_id`, `address`, `country`, `city`, `longitude`, `latitude`, `postal_code`, `phone`, `set_default`, `created_at`, `updated_at` FROM " . $this->Table . " WHERE id = ? ");
+        $stmt = $this->conn->prepare("SELECT `id`, `user_id`, `address`, country_id as `country`, city_id as `city`, `longitude`, `latitude`, `postal_code`, `phone`, `set_default`, `created_at`, `updated_at` FROM " . $this->Table . " WHERE id = ? ");
         $stmt->bind_param("i", $this->id);
         $stmt->execute();
         $stmt->bind_result($this->id, $this->user_id, $this->address, $this->country, $this->city, $this->longitude, $this->latitude, $this->postal_code, $this->phone, $this->set_default, $this->created_at, $this->updated_at);

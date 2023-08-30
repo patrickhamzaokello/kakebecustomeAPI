@@ -22,7 +22,7 @@ class CityHandler
         $cities_array = array();
 
 
-        $stmt = "SELECT `id` FROM " . $this->cities_table . " ORDER BY  `cities`.`name` ASC";
+        $stmt = "SELECT `id` FROM " . $this->cities_table . " ORDER BY  `cities`.`name` ASC Limit 30";
         $city_id_result = mysqli_query($this->conn, $stmt);
 
         while ($row = mysqli_fetch_array($city_id_result)) {

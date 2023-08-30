@@ -30,7 +30,7 @@ class AddressHandler
     function create()
     {
 
-        $stmt = $this->conn->prepare("SELECT `user_id`, `address`, `city`, `phone` FROM " . $this->address_table . " WHERE user_id = ? AND (address = ? AND city = ? AND phone = ? )");
+        $stmt = $this->conn->prepare("SELECT `user_id`, `address`, `city_id`, `phone` FROM " . $this->address_table . " WHERE user_id = ? AND (address = ? AND city_id = ? AND phone = ? )");
         $stmt->bind_param("isss", $this->user_id, $this->location, $this->district, $this->phone);
         $stmt->execute();
         $stmt->store_result();
@@ -40,7 +40,7 @@ class AddressHandler
             return false;
         } else {
 
-            $stmt = $this->conn->prepare("INSERT INTO " . $this->address_table . "( `user_id`, `address`, `city`, `phone`,`latitude`,`longitude`) VALUES(?,?,?,?,?,?)");
+            $stmt = $this->conn->prepare("INSERT INTO " . $this->address_table . "( `user_id`, `address`, `city_id`, `phone`,`latitude`,`longitude`) VALUES(?,?,?,?,?,?)");
 
             $this->user_id = htmlspecialchars(strip_tags($this->user_id));
             $this->district = htmlspecialchars(strip_tags($this->district));
