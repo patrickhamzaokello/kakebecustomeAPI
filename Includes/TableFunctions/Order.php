@@ -155,9 +155,10 @@ class Order
                 $phpdate = strtotime($this->order_date);
                 $mysqldate = date('d M Y h:i A', $phpdate);
                 $orderDetails = $this->fetchOrderDetails($this->order_id);
+//                $data_address->country . " , " . $data_address->city . ", " . $data_address->address . " , " . $data_address->phone . " , " . $data_address->email . "\n" .
 
                 $temp['order_id'] = $this->order_id;
-                $temp['order_address'] = $data_address->country . " , " . $data_address->city . ", " . $data_address->address . " , " . $data_address->phone . " , " . $data_address->email . "\n" .$orderDetails;
+                $temp['order_address'] = $orderDetails;
                 $temp['customer_id'] = $this->customer_id;
                 $temp['order_date'] = $mysqldate;
                 $temp['total_amount'] = $this->total_amount;
