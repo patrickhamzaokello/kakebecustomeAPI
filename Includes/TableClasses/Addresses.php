@@ -65,7 +65,8 @@ class Addresses
      */
     public function getCountry()
     {
-        return $this->country;
+//        return $this->country;
+        return "Uganda";
     }
 
     /**
@@ -73,8 +74,11 @@ class Addresses
      */
     public function getCity()
     {
-        return $this->city;
+        $city =  new Cities($this->conn,  $this->city);
+        return $city->getName();
     }
+
+
 
     /**
      * Get the value of longitude

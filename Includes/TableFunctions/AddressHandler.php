@@ -89,7 +89,6 @@ class AddressHandler
         $userID = htmlspecialchars(strip_tags($_GET["userId"]));
         $userAddressPage = htmlspecialchars(strip_tags($_GET["page"]));
 
-//        {"name":"Oweta Jacob Emmy","email":"oweta001@gmail.com","address":"Obote Avenue","country":"Uganda","city":"Lira City","postal_code":null,"phone":"0394510777"}
 
         if ($userID) {
             $this->pageno = floatval($userAddressPage);
