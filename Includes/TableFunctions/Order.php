@@ -138,12 +138,10 @@ class Order
 
 
             $stmt = $this->conn->prepare("SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`  FROM " . $this->order_table . " WHERE user_id = " . $this->userOrderid . " ORDER BY id DESC  LIMIT " . $offset . "," . $no_of_records_per_page);
-            echo "id";
 
         } else {
             // echo "working b";
             $stmt = $this->conn->prepare("SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed` FROM " . $this->order_table . " ORDER BY id DESC");
-            echo "no id";
 
         }
 
