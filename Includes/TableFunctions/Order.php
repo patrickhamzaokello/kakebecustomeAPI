@@ -108,44 +108,37 @@ class Order
 
     function readUserOrders()
     {
-
-
         $itemRecords = array();
 
         $this->userOrderid = htmlspecialchars(strip_tags($_GET["customerId"]));
         $this->userOrderPage = htmlspecialchars(strip_tags($_GET["page"]));
-
-        // echo "working". $this->userOrderid .$this->userOrderPage;
-
 
         if (htmlspecialchars(strip_tags($_GET["customerId"])) != null) {
             $this->pageno = floatval($this->userOrderPage);
             $no_of_records_per_page = 10;
             $offset = ($this->pageno - 1) * $no_of_records_per_page;
 
-
-            $sql = "SELECT COUNT(*) as count FROM " . $this->order_table . " WHERE user_id = " . $this->userOrderid . " limit 1";
-            $result = mysqli_query($this->conn, $sql);
-            $data = mysqli_fetch_assoc($result);
+            $sql = "SELECT COUNT(*) as count FROM " . $this->order_table . " WHERE user_id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $this->userOrderid);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $data = $result->fetch_assoc();
             $total_rows = floatval($data['count']);
             $total_pages = ceil($total_rows / $no_of_records_per_page);
-
 
             $itemRecords["page"] = $this->pageno;
             $itemRecords["results"] = array();
             $itemRecords["total_pages"] = $total_pages;
             $itemRecords["total_results"] = $total_rows;
 
+            $stmt->close(); // Close the previous statement
 
-            $stmt = $this->conn->prepare("SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`  FROM " . $this->order_table . " WHERE user_id = " . $this->userOrderid . " ORDER BY id DESC  LIMIT " . $offset . "," . $no_of_records_per_page);
-
+            $stmt = $this->conn->prepare("SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed`  FROM " . $this->order_table . " WHERE user_id = ? ORDER BY id DESC LIMIT ?, ?");
+            $stmt->bind_param("iii", $this->userOrderid, $offset, $no_of_records_per_page);
         } else {
-            // echo "working b";
             $stmt = $this->conn->prepare("SELECT `id`, `shipping_address`, `user_id`, `created_at`, `grand_total`, `delivery_status`, `payment_status_viewed` FROM " . $this->order_table . " ORDER BY id DESC");
-
         }
-
-
 
         $stmt->execute();
         $stmt->store_result();
@@ -155,21 +148,22 @@ class Order
 
         if ($numberofrows > 0) {
             while ($stmt->fetch()) {
-
                 $temp = array();
 
                 $data_address = json_decode($this->order_address);
                 $data_address->country = "Uganda";
                 $phpdate = strtotime($this->order_date);
                 $mysqldate = date('d M Y h:i A', $phpdate);
+                $orderDetails = $this->fetchOrderDetails($this->order_id);
 
                 $temp['order_id'] = $this->order_id;
-                $temp['order_address'] = $data_address->country . " , " . $data_address->city . ", " . $data_address->address . " , " . $data_address->phone . " , " . $data_address->email;
+                $temp['order_address'] = $data_address->country . " , " . $data_address->city . ", " . $data_address->address . " , " . $data_address->phone . " , " . $data_address->email . "\n" .$orderDetails;
                 $temp['customer_id'] = $this->customer_id;
                 $temp['order_date'] = $mysqldate;
                 $temp['total_amount'] = $this->total_amount;
                 $temp['order_status'] = $this->order_status;
                 $temp['processed_by'] = $this->processed_by;
+
 
                 array_push($itemRecords["results"], $temp);
             }
@@ -187,9 +181,41 @@ class Order
             array_push($itemRecords["results"], $temp);
         }
 
-
         return $itemRecords;
     }
+
+    function fetchOrderDetails($order_id)
+    {
+        $orderDetails = array();
+
+        $stmt = $this->conn->prepare("SELECT `product_id`, `price` FROM `order_details` WHERE `order_id` = ?");
+        $stmt->bind_param("i", $order_id);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($product_id, $price);
+
+        while ($stmt->fetch()) {
+            // Fetch product name from the `products` table based on $product_id
+            $product_query = "SELECT `name` FROM `products` WHERE `id` = ?";
+            $product_stmt = $this->conn->prepare($product_query);
+            $product_stmt->bind_param("i", $product_id);
+            $product_stmt->execute();
+            $product_stmt->bind_result($product_name);
+
+            if ($product_stmt->fetch()) {
+                $orderDetails[] = $product_name . " (" . number_format($price, 2, '.', ',') . " UGX)";
+            } else {
+                $orderDetails[] = "Product not found"; // Handle the case where the product is not found.
+            }
+            $product_stmt->close(); // Close the product statement
+        }
+
+        $stmt->close();
+
+        return implode("\n", $orderDetails); // Separate order details with newline characters
+    }
+
+
 
 
     function readTodaysOrders()
