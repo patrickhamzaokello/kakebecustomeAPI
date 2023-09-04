@@ -29,44 +29,56 @@ class AddressHandler
 
     function create()
     {
-
-        $stmt = $this->conn->prepare("SELECT `user_id`, `address`, `city_id`, `phone` FROM " . $this->address_table . " WHERE user_id = ? AND (address = ? AND city_id = ? AND phone = ? )");
+        // Check if the record with the given criteria already exists
+        $stmt = $this->conn->prepare("SELECT `user_id`, `address`, `city_id`, `phone` FROM " . $this->address_table . " WHERE user_id = ? AND address = ? AND city_id = ? AND phone = ?");
         $stmt->bind_param("isss", $this->user_id, $this->location, $this->district, $this->phone);
         $stmt->execute();
         $stmt->store_result();
 
-        //if the user already exist in the database
+        // Check if a record with the same criteria already exists
         if ($stmt->num_rows > 0) {
+            $stmt->close(); // Close the statement
             return false;
-        } else {
+        }
 
-            $stmt = $this->conn->prepare("INSERT INTO " . $this->address_table . "( `user_id`, `address`, `city_id`, `phone`,`latitude`,`longitude`) VALUES(?,?,?,?,?,?)");
+        // Close the previous statement before preparing a new one
+        $stmt->close();
 
-            $this->user_id = htmlspecialchars(strip_tags($this->user_id));
-            $this->district = htmlspecialchars(strip_tags($this->district));
-            $this->location = htmlspecialchars(strip_tags($this->location));
-            $this->phone = htmlspecialchars(strip_tags($this->phone));
-            $this->latitude = htmlspecialchars(strip_tags($this->latitude));
-            $this->longitude = htmlspecialchars(strip_tags($this->longitude));
+        // Retrieve the city ID based on the district
+        $sql = "SELECT id FROM cities WHERE name = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $this->district);
+        $stmt->execute();
+        $stmt->bind_result($cityId);
 
-            $stmt->bind_param("isssdd", $this->user_id, $this->location, $this->district, $this->phone, $this->latitude, $this->longitude);
+        // Fetch the result
+        if ($stmt->fetch()) {
+            // Now you have the city ID for the given district
+            $stmt->close(); // Close the statement
 
-            if ($stmt->execute()) {
+            // Insert a new record
+            $insertStmt = $this->conn->prepare("INSERT INTO " . $this->address_table . "(`user_id`, `address`, `city_id`, `phone`, `latitude`, `longitude`) VALUES (?, ?, ?, ?, ?, ?)");
+            $insertStmt->bind_param("isisdd", $this->user_id, $this->location, $cityId, $this->phone, $this->latitude, $this->longitude);
+
+            if ($insertStmt->execute()) {
                 $this->exe_status = "success";
             } else {
                 $this->exe_status = "failure";
             }
 
+            $insertStmt->close(); // Close the insert statement
 
-            if ($this->exe_status == "success") {
+            if ($this->exe_status === "success") {
                 return true;
+            } else {
+                return false;
             }
-
-            return false;
+        } else {
+            $stmt->close(); // Close the statement
+            return false; // No city found for the given district
         }
-
-
     }
+
 
 
     function readUserAddress()
